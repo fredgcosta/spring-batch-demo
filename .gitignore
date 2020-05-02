@@ -1,6 +1,75 @@
 
-# Created by https://www.gitignore.io/api/visualstudiocode,git,java,maven
-# Edit at https://www.gitignore.io/?templates=visualstudiocode,git,java,maven
+# Created by https://www.gitignore.io/api/intelij+all,git,java,maven,eclipse,windows
+# Edit at https://www.gitignore.io/?templates=intelij+all,git,java,maven,eclipse,windows
+
+### Eclipse ###
+.metadata
+bin/
+tmp/
+*.tmp
+*.bak
+*.swp
+*~.nib
+local.properties
+.settings/
+.loadpath
+.recommenders
+
+# External tool builders
+.externalToolBuilders/
+
+# Locally stored "Eclipse launch configurations"
+*.launch
+
+# PyDev specific (Python IDE for Eclipse)
+*.pydevproject
+
+# CDT-specific (C/C++ Development Tooling)
+.cproject
+
+# CDT- autotools
+.autotools
+
+# Java annotation processor (APT)
+.factorypath
+
+# PDT-specific (PHP Development Tools)
+.buildpath
+
+# sbteclipse plugin
+.target
+
+# Tern plugin
+.tern-project
+
+# TeXlipse plugin
+.texlipse
+
+# STS (Spring Tool Suite)
+.springBeans
+
+# Code Recommenders
+.recommenders/
+
+# Annotation Processing
+.apt_generated/
+
+# Scala IDE specific (Scala & Java development for Eclipse)
+.cache-main
+.scala_dependencies
+.worksheet
+
+### Eclipse Patch ###
+# Eclipse Core
+.project
+
+# JDT-specific (Eclipse Java Development Tools)
+.classpath
+
+# Annotation Processing
+.apt_generated
+
+.sts4-cache/
 
 ### Git ###
 # Created by git for backups. To disable backups in Git:
@@ -16,6 +85,8 @@
 *_BASE_*.txt
 *_LOCAL_*.txt
 *_REMOTE_*.txt
+
+#!! ERROR: intelij+all is undefined. Use list command to see defined gitignore types !!#
 
 ### Java ###
 # Compiled class file
@@ -55,15 +126,30 @@ buildNumber.properties
 .mvn/wrapper/maven-wrapper.jar
 .flattened-pom.xml
 
-### VisualStudioCode ###
-.vscode/*
-!.vscode/settings.json
-!.vscode/tasks.json
-!.vscode/launch.json
-!.vscode/extensions.json
+### Windows ###
+# Windows thumbnail cache files
+Thumbs.db
+Thumbs.db:encryptable
+ehthumbs.db
+ehthumbs_vista.db
 
-### VisualStudioCode Patch ###
-# Ignore all local history of files
-.history
+# Dump file
+*.stackdump
 
-# End of https://www.gitignore.io/api/visualstudiocode,git,java,maven
+# Folder config file
+[Dd]esktop.ini
+
+# Recycle Bin used on file shares
+$RECYCLE.BIN/
+
+# Windows Installer files
+*.cab
+*.msi
+*.msix
+*.msm
+*.msp
+
+# Windows shortcuts
+*.lnk
+
+# End of https://www.gitignore.io/api/intelij+all,git,java,maven,eclipse,windows
