@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<configuration>
+    <property resource="application.properties" />
+    <contextName>${spring.application.name}</contextName>
+
+    <include resource="org/springframework/boot/logging/logback/defaults.xml" />
+    <appender name="async" class="net.logstash.logback.appender.LoggingEventAsyncDisruptorAppender">
+        <ringBufferSize>131072</ringBufferSize>
+        <waitStrategyType>sleeping</waitStrategyType>
+        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+            <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
+                <providers>
+                    <contextName>
+                        <fieldName>app</fieldName>
+                    </contextName>
+                    <timestamp>
+                        <fieldName>ts</fieldName>
+                        <timeZone>UTC</timeZone>
+                    </timestamp>
+                    <loggerName>
+                        <fieldName>logger</fieldName>
+                    </loggerName>
+                    <logLevel>
+                        <fieldName>level</fieldName>
+                    </logLevel>
+                    <callerData>
+                        <classFieldName>class</classFieldName>
+                        <methodFieldName>method</methodFieldName>
+                        <lineFieldName>line</lineFieldName>
+                        <fileFieldName>file</fileFieldName>
+                    </callerData>
+                    <threadName>
+                        <fieldName>thread</fieldName>
+                    </threadName>
+                    <mdc />
+                    <arguments>
+                        <includeNonStructuredArguments>false</includeNonStructuredArguments>
+                    </arguments>
+                    <stackTrace>
+                        <throwableConverter class="net.logstash.logback.stacktrace.ShortenedThrowableConverter">
+                            <maxDepthPerThrowable>30</maxDepthPerThrowable>
+                            <maxLength>4096</maxLength>
+                            <shortenedClassNameLength>20</shortenedClassNameLength>
+                            <rootCauseFirst>true</rootCauseFirst>
+                        </throwableConverter>
+                    </stackTrace>
+                    <message>
+                        <fieldName>msg</fieldName>
+                    </message>
+                </providers>
+            </encoder>
+        </appender>
+    </appender>
+
+    <!-- <include resource="org/springframework/boot/logging/logback/console-appender.xml" /> -->
+
+    <root level="INFO">
+        <appender-ref ref="async" />
+    </root>
+</configuration>

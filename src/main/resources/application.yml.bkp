@@ -1,0 +1,47 @@
+spring:
+  application:
+    name: souJavaBsb
+  datasource:
+    url: jdbc:postgresql://localhost:5432/dataflow?useSSL=false
+    driver-class-name: org.postgresql.Driver
+    username: root
+    password: rootpw
+    # driver-class-name: org.h2.Driver
+    # url: jdbc:h2:mem:testdb
+    # driver-class-name: org.hsqldb.jdbc.JDBCDriver
+    # url: jdbc:hsqldb:mem:testdb;DB_CLOSE_DELAY=-1
+    # username: sa
+    # password: password
+  jpa:
+    show-sql: false
+    hibernate:
+      ddl-auto: update
+    properties:
+      hibernate.jdbc.batch_size: 2500
+      hibernate.order_inserts: true
+      hibernate.cache.use_query_cache: false
+      hibernate.cache.use_second_level_cache: false
+      hibernate.cache.use_structured_entries: false
+      hibernate.cache.use_minimal_puts: false
+      hibernate.format_sql: false
+      hibernate.generate_statistics: false
+  h2:
+    console:
+      enabled: true
+management:
+  metrics:
+    tags:
+      application: ${spring.application.name}
+    export:
+      prometheus:
+        enabled: true
+        rsocket:
+          enabled: true
+          host: localhost #required
+          port: 7001
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+
+
