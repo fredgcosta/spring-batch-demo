@@ -48,25 +48,16 @@ Alternatively you can use the [Spring Boot Maven plugin](https://docs.spring.io/
 mvn spring-boot:run
 ```
 
-Before executing the project, we have to generate a new Docker Image of Spring Cloud Data Flow Server, as the official one was built with jdk-11
-https://github.com/spring-cloud/spring-cloud-dataflow/issues/3507
-
-So first build the Dockerfile:
-
-```shell
-cd docker && docker build --pull --rm -f "Dockerfile" -t springcloud/spring-cloud-dataflow-server:latest "."
-```
-
 If you want to run the Spring Cloud Data Flow example, run the following commands:
 
 ```shell
-HOST_MOUNT_PATH=~/.m2/repository/ DOCKER_MOUNT_PATH=/root/.m2/repository STREAM_APPS_URI=https://dataflow.spring.io/Einstein-BUILD-SNAPSHOT-stream-applications-kafka-maven SKIPPER_VERSION=2.4.0.RC1 DATAFLOW_VERSION=2.5.0.RC1 docker-compose -f ./docker/docker-compose.yml -f ./docker/docker-compose-postgres.yml -f ./docker/docker-compose-prometheus.yml up
+HOST_MOUNT_PATH=~/.m2/repository/ DOCKER_MOUNT_PATH=/root/.m2/repository STREAM_APPS_URI=https://dataflow.spring.io/Einstein-BUILD-SNAPSHOT-stream-applications-kafka-maven SKIPPER_VERSION=2.4.0.RELEASE DATAFLOW_VERSION=2.5.0.RELEASE docker-compose -f ./docker/docker-compose.yml -f ./docker/docker-compose-postgres.yml -f ./docker/docker-compose-monitor.yml up
 ```
 
 And to Shut Down the containers:
 
 ```shell
-HOST_MOUNT_PATH=~/.m2/repository/ DOCKER_MOUNT_PATH=/root/.m2/repository STREAM_APPS_URI=https://dataflow.spring.io/Einstein-BUILD-SNAPSHOT-stream-applications-kafka-maven SKIPPER_VERSION=2.4.0.RC1 DATAFLOW_VERSION=2.5.0.RC1 docker-compose -f ./docker/docker-compose.yml -f ./docker/docker-compose-postgres.yml -f ./docker/docker-compose-prometheus.yml down
+HOST_MOUNT_PATH=~/.m2/repository/ DOCKER_MOUNT_PATH=/root/.m2/repository STREAM_APPS_URI=https://dataflow.spring.io/Einstein-BUILD-SNAPSHOT-stream-applications-kafka-maven SKIPPER_VERSION=2.4.0.RELEASE DATAFLOW_VERSION=2.5.0.RELEASE docker-compose -f ./docker/docker-compose.yml -f ./docker/docker-compose-postgres.yml -f ./docker/docker-compose-monitor.yml down
 ```
 
 ### Actuator
