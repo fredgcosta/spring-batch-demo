@@ -3,10 +3,10 @@ package com.example.demo.config;
 import com.example.demo.models.Transaction;
 import com.example.demo.repositories.TransactionRepository;
 import com.example.demo.steps.chunklets.TransactionItemProcessor;
-import com.example.demo.steps.chunklets.TransactionItemReader;
 import com.example.demo.steps.chunklets.TransactionItemWriter;
+import com.example.demo.steps.mappers.DefaultCompositeLineMapper;
+import com.example.demo.steps.mappers.DefaultRecordSeparationPolicy;
 import com.example.demo.steps.tasklets.FileDownloadTasklet;
-import com.example.demo.steps.tokenizers.TransactionCompositeLineTokenizer;
 
 import org.springframework.batch.core.Job;
 import org.springframework.batch.core.Step;
@@ -16,16 +16,16 @@ import org.springframework.batch.core.configuration.annotation.StepBuilderFactor
 import org.springframework.batch.core.configuration.annotation.StepScope;
 import org.springframework.batch.core.launch.support.RunIdIncrementer;
 import org.springframework.batch.item.file.FlatFileItemReader;
-import org.springframework.batch.item.file.mapping.DefaultLineMapper;
-import org.springframework.batch.item.file.mapping.PassThroughFieldSetMapper;
-import org.springframework.batch.item.file.transform.FieldSet;
+import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.actuate.autoconfigure.metrics.MeterRegistryCustomizer;
 import org.springframework.cloud.task.configuration.EnableTask;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 
+import io.micrometer.core.instrument.MeterRegistry;
 import lombok.extern.slf4j.Slf4j;
 
 @Configuration
@@ -39,75 +39,50 @@ public class BatchConfiguration {
   @Autowired
   public StepBuilderFactory stepBuilderFactory;
 
-  @Autowired
-  private TransactionRepository transactionRepository;
-
   @Bean
-  public FileDownloadTasklet fileDownloadTasklet() {
-    return new FileDownloadTasklet();
-  }
-
-  @Bean
-  public Step taskletStep() {
-    return stepBuilderFactory.get("downloadFileStep").tasklet(fileDownloadTasklet()).build();
-  }
-
-  public Step chunkletStep() {
-    return stepBuilderFactory.get("transactionProcessFileStep")
-        .<Transaction, Transaction> chunk(CHUNK_SIZE)
-        .reader(reader())
-        .processor(processor())
-        .writer(writer())
-        .stream(flatFileItemReader(null, null)).build();
-  }
-
-  private TransactionItemReader reader() {
-    TransactionItemReader reader = new TransactionItemReader();
-    reader.setFieldSetReader(flatFileItemReader(null, null));
-    return reader;
-  }
-
-  private TransactionItemProcessor processor() {
-    return new TransactionItemProcessor();
-  }
-
-  private TransactionItemWriter writer() {
-    return new TransactionItemWriter(transactionRepository);
-  }
-
-  @Bean
-  public TransactionCompositeLineTokenizer compositeLineTokenizer() {
-    return new TransactionCompositeLineTokenizer();
+  MeterRegistryCustomizer<MeterRegistry> metricsCommonTags() {
+    return registry -> registry.config().commonTags("application",
+        "#{jobParameters['application.name'] ?: 'demo-app'", "instance", "#{jobParameters['instance.name'] ?: 'instance1'");
   }
 
   @Bean
   @StepScope
-  public FlatFileItemReader<FieldSet> flatFileItemReader(
+  public FlatFileItemReader<Transaction> flatFileItemReader(
       @Value("#{jobParameters['baseDir'] ?: '/input/'}") final String baseDir,
-      @Value("#{jobParameters['fileName'] ?: 'exemplo-sou-java.txt' }") final String fileName) {
+      @Value("#{jobParameters['fileName'] ?: 'exemplo-sou-java-10.txt' }") final String fileName) {
 
-    FlatFileItemReader<FieldSet> reader = new FlatFileItemReader<>();
-    log.info("lendo o arquivo do classpath");
-    reader.setResource(new ClassPathResource(baseDir + fileName));
-
-    reader.setLineMapper(new DefaultLineMapper<FieldSet>() {
-      {
-        setLineTokenizer(compositeLineTokenizer());
-      }
-      {
-        setFieldSetMapper(new PassThroughFieldSetMapper());
-      }
-    });
-    return reader;
-  }
-
-  @Bean
-  public Job souJavaJob(@Autowired JobBuilderFactory jobBuilderFactory) {
-    return jobBuilderFactory.get("souJavaJob")
-        .incrementer(new RunIdIncrementer())
-        .start(taskletStep())
-        .next(chunkletStep())
+    return new FlatFileItemReaderBuilder<Transaction>()
+        .name("myFlatFileItemReader")
+        .resource(new ClassPathResource(baseDir + fileName))
+        .lineMapper(new DefaultCompositeLineMapper())
+        .recordSeparatorPolicy(new DefaultRecordSeparationPolicy())
+        .linesToSkip(1)
+        .skippedLinesCallback(log::info)
         .build();
   }
 
+  @Bean
+  public Step chunkletStep(TransactionRepository transactionRepository) {
+    return stepBuilderFactory.get("transactionProcessingStep")
+        .<Transaction, Transaction> chunk(CHUNK_SIZE)
+        .reader(flatFileItemReader(null, null))
+        .processor(new TransactionItemProcessor())
+        .writer(new TransactionItemWriter(transactionRepository))
+        .stream(flatFileItemReader(null, null)).build();
+  }
+
+  @Bean
+  public Step taskletStep() {
+    return stepBuilderFactory.get("fileDownloadingStep").tasklet(new FileDownloadTasklet()).build();
+  }
+
+  @Bean
+  public Job souJavaJob(@Autowired JobBuilderFactory jobBuilderFactory,
+      @Autowired TransactionRepository transactionRepository) {
+    return jobBuilderFactory.get("souJavaJob")
+        .incrementer(new RunIdIncrementer())
+        .start(taskletStep())
+        .next(chunkletStep(transactionRepository))
+        .build();
+  }
 }
