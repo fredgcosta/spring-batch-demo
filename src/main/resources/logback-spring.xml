@@ -4,7 +4,7 @@
     <contextName>${spring.application.name}</contextName>
 
     <include resource="org/springframework/boot/logging/logback/defaults.xml" />
-    <appender name="async" class="net.logstash.logback.appender.LoggingEventAsyncDisruptorAppender">
+    <appender name="ASYNC" class="net.logstash.logback.appender.LoggingEventAsyncDisruptorAppender">
         <ringBufferSize>131072</ringBufferSize>
         <waitStrategyType>sleeping</waitStrategyType>
         <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
@@ -55,6 +55,6 @@
     <!-- <include resource="org/springframework/boot/logging/logback/console-appender.xml" /> -->
 
     <root level="INFO">
-        <appender-ref ref="async" />
+        <appender-ref ref="ASYNC" />
     </root>
 </configuration>
