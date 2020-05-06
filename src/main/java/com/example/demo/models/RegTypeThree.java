@@ -2,31 +2,20 @@ package com.example.demo.models;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.MapsId;
 import javax.persistence.OneToOne;
 
-import lombok.AllArgsConstructor;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
 import lombok.ToString;
 
 @Entity
-@AllArgsConstructor
-@NoArgsConstructor
-@Setter
-@Getter
-@ToString
+@Data
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
-public class RegTypeThree {
-    public static final String LINE_ID = "0103";
+public class RegTypeThree extends Register {
 
-    @Id
-    @EqualsAndHashCode.Include
-    private long id;
+    public static final String LINE_ID = "0103";
 
     @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "id")
@@ -34,9 +23,7 @@ public class RegTypeThree {
     @ToString.Exclude
     private Transaction transaction;
 
-    private String field31;
-    private String field32;
-    private String field33;
-    private String field34;
-    private String field35;
+    private String field01;
+    private String field02;
+    private String field03;
 }
