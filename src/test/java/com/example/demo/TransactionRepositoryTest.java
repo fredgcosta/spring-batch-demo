@@ -7,7 +7,6 @@ import java.util.List;
 
 import javax.persistence.EntityManager;
 import javax.sql.DataSource;
-import javax.transaction.Transactional;
 
 import com.example.demo.models.RegTypeOne;
 import com.example.demo.models.RegTypeThree;
