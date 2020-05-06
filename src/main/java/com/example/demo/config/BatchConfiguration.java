@@ -40,12 +40,6 @@ public class BatchConfiguration {
   public StepBuilderFactory stepBuilderFactory;
 
   @Bean
-  MeterRegistryCustomizer<MeterRegistry> metricsCommonTags() {
-    return registry -> registry.config().commonTags("application",
-        "#{jobParameters['application.name'] ?: 'demo-app'", "instance", "#{jobParameters['instance.name'] ?: 'instance1'");
-  }
-
-  @Bean
   @StepScope
   public FlatFileItemReader<Transaction> flatFileItemReader(
       @Value("#{jobParameters['baseDir'] ?: '/input/'}") final String baseDir,

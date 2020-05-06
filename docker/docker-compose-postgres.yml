@@ -18,6 +18,8 @@ services:
       - 5432
     ports:
       - 5432:5432
+    networks:
+      - scdf-net
 
   pgadmin4:
     image: dpage/pgadmin4:4.21
@@ -30,6 +32,8 @@ services:
       - "80:80"
     depends_on:
       - postgres
+    networks:
+      - scdf-net
 
   dataflow-server:
     environment:
