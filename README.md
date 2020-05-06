@@ -1,6 +1,6 @@
-# Spring Boot Application Template/Starter-Project
+# Spring Batch example project running on Spring Cloud Data Flow
 
-[![FOSSA Status](https://app.fossa.io/api/projects/git%2Bgithub.com%2FSpring-Boot-Framework%2FSpring-Boot-Application-Template.svg?type=shield)](https://app.fossa.io/projects/git%2Bgithub.com%2FSpring-Boot-Framework%2FSpring-Boot-Application-Template?ref=badge_shield)
+[![GitHub license](https://img.shields.io/github/license/fredgcosta/spring-batch-demo)](https://github.com/fredgcosta/spring-batch-demo/blob/master/LICENSE)
 
 The only thing better than a Maven archetype is a repo you can fork with everything already setup. Skip the documentation and just fork-and-code.
 
@@ -8,30 +8,33 @@ Delete the sample code, replace with your own and you’re good to go.
 
 ## Built With
 
--     [Maven](https://maven.apache.org/) - Dependency Management
--     [JDK](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html) - Java™ Platform, Standard Edition Development Kit
--     [Spring Boot](https://spring.io/projects/spring-boot) - Framework to ease the bootstrapping and development of new Spring Applications
--     [H2](https://www.h2database.com/) - Very fast, open source, JDBC API
--     [git](https://git-scm.com/) - Free and Open-Source distributed version control system
--     [Prometheus](https://prometheus.io/) - Monitoring system and time series database
--     [Lombok](https://projectlombok.org/) - Never write another getter or equals method again, with one annotation your class has a fully featured builder, Automate your logging variables, and much more.
--     [Swagger](https://swagger.io/) - Open-Source software framework backed by a large ecosystem of tools that helps developers design, build, document, and consume RESTful Web services.
+* [Maven](https://maven.apache.org/) - Dependency Management
+* [Spring Boot](https://start.spring.io/) - Spring Boot Initializer
+* [OpenJDK](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=hotspot) - Java™ Platform, Standard Edition Development Kit
+* [Spring Boot](https://spring.io/projects/spring-boot) - Framework to ease the bootstrapping and development of new Spring Applications
+* [PostgreSQL](https://www.postgresql.org/) - The World's Most Advanced Open Source Relational Database
+* [git](https://git-scm.com/) - Free and Open-Source distributed version control system
+* [Prometheus](https://prometheus.io/) - Monitoring system and time series database
+* [Lombok](https://projectlombok.org/) - Never write another getter or equals method again, with one annotation your class has a fully featured builder, Automate your logging variables, and much more.
 
 ## External Tools Used
 
-- [Postman](https://www.getpostman.com/) - API Development Environment (Testing Docmentation)
+* [Postman](https://www.getpostman.com/) - API Development Environment (Testing Docmentation)
 
 ## To-Do
 
-- [x] Logger (Console, JSON, LogStash)
-- [x] RESTful Web Service (CRUD)
+- [x] Logger (Console, Json, ELK)
+- [x] RESTful Web Service (API for Job executing)
 - [ ] Docker
+- [x] Spring Cloud Data Flow
+- [ ] NoSQL (Redis)
+- [ ] PostgreSQL (Connect to Multiple Schemas)
 - [x] Micrometer
-- [x] Grafana
+- [x] Grafna
 
 ## Running the application locally
 
-There are several ways to run a Spring Boot application on your local machine. One way is to execute the `main` method in the `com.arc.sbtest.SBtemplateApplication` class from your IDE.
+There are several ways to run a Spring Boot application on your local machine. One way is to execute the `main` method in the `com.example.demo.SpringBatchDemoApplication` class from your IDE.
 
 - Download the zip or clone the Git repository.
 - Unzip the zip file (if you downloaded one)
@@ -48,40 +51,44 @@ Alternatively you can use the [Spring Boot Maven plugin](https://docs.spring.io/
 mvn spring-boot:run
 ```
 
+Debug Mode
+```shell
+mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005"  
+```
+
 If you want to run the Spring Cloud Data Flow example, run the following commands:
 
 ```shell
-HOST_MOUNT_PATH=~/.m2/repository/ DOCKER_MOUNT_PATH=/root/.m2/repository STREAM_APPS_URI=https://dataflow.spring.io/Einstein-BUILD-SNAPSHOT-stream-applications-kafka-maven SKIPPER_VERSION=2.4.0.RELEASE DATAFLOW_VERSION=2.5.0.RELEASE docker-compose -f ./docker/docker-compose.yml -f ./docker/docker-compose-postgres.yml -f ./docker/docker-compose-monitor.yml up
+HOST_MOUNT_PATH=~/.m2/repository/ DOCKER_MOUNT_PATH=/root/.m2/repository STREAM_APPS_URI=https://dataflow.spring.io/Einstein-BUILD-SNAPSHOT-stream-applications-kafka-maven SKIPPER_VERSION=2.4.0.RELEASE DATAFLOW_VERSION=2.5.0.RELEASE docker-compose -f ./docker/docker-compose.yml -f ./docker/docker-compose-postgres.yml -f ./docker/docker-compose-prometheus.yml up
 ```
 
 And to Shut Down the containers:
 
 ```shell
-HOST_MOUNT_PATH=~/.m2/repository/ DOCKER_MOUNT_PATH=/root/.m2/repository STREAM_APPS_URI=https://dataflow.spring.io/Einstein-BUILD-SNAPSHOT-stream-applications-kafka-maven SKIPPER_VERSION=2.4.0.RELEASE DATAFLOW_VERSION=2.5.0.RELEASE docker-compose -f ./docker/docker-compose.yml -f ./docker/docker-compose-postgres.yml -f ./docker/docker-compose-monitor.yml down
+HOST_MOUNT_PATH=~/.m2/repository/ DOCKER_MOUNT_PATH=/root/.m2/repository STREAM_APPS_URI=https://dataflow.spring.io/Einstein-BUILD-SNAPSHOT-stream-applications-kafka-maven SKIPPER_VERSION=2.4.0.RELEASE DATAFLOW_VERSION=2.5.0.RELEASE docker-compose -f ./docker/docker-compose.yml -f ./docker/docker-compose-postgres.yml -f ./docker/docker-compose-prometheus.yml down
 ```
 
-### Actuator
+### Tools
 
 To monitor and manage your application
 
-| URL                                         | Method |
-| ------------------------------------------- | ------ |
-| `http://localhost:8080`                     | GET    |
-| `http://localhost:8080/actuator/`           | GET    |
-| `http://localhost:8080/actuator/health`     | GET    |
-| `http://localhost:8080/actuator/info`       | GET    |
-| `http://localhost:8080/actuator/prometheus` | GET    |
-| `http://localhost:8080/actuator/httptrace`  | GET    |
+| Tool          | URL                                       | Method |
+| ------------- | ----------------------------------------- | ------ |
+| SCDF Dashboad | `http://localhost:9393/dashboard`         | GET    |
+| Prometheus    | `http://localhost:9090/graph`             | GET    |
+| Grafana       | `http://localhost:3000`                   | GET    |
+| RSocket Proxy | `http://localhost:9096/metrics/connected` | GET    |
+| pgAdmin4      | `http://localhost:80`                     | GET    |
 
 ### URLs
 
-| URL                                                             | Method | Remarks                 |
-| --------------------------------------------------------------- | ------ | ----------------------- |
-| `http://localhost:8080/bw/tech-stack`                           | GET    | Custom Response Headers |
-| `http://localhost:8080/api/generic-hello`                       | GET    |                         |
-| `http://localhost:8080/api/personalized-hello/`                 | GET    |                         |
-| `http://localhost:8080/api/personalized-hello?name=spring-boot` | GET    |                         |
-| `http://localhost:8080/api/loggers`                             | GET    |                         |
+| URL | Method | Remarks |
+| --- | ------ | ------- |
+|     | GET    |         |
+|     | GET    |         |
+|     | GET    |         |
+|     | GET    |         |
+|     | GET    |         |
 
 ### Person URLs
 
@@ -108,15 +115,18 @@ The project (a.k.a. project directory) has a particular directory structure. A r
 │       └── java
 │           ├── com.example.demo
 │           ├── com.example.demo.config
-│           ├── com.example.demo.controllers
-│           ├── com.example.demo.exception
 │           ├── com.example.demo.models
-│           ├── com.example.demo.utils
 │           ├── com.example.demo.repositories
-│           └── com.example.demo.services
+│           ├── com.example.demo.steps
+│           ├── com.example.demo.steps.chunklets
+│           ├── com.example.demo.steps.mappers
+│           ├── com.example.demo.steps.tasklets
+│           └── com.example.demo.steps.tokenizers
 ├── src
 │   └── main
 │       └── resources
+            ├── input
+            │   └── exemplo-sou-java.txt 
 │           ├── application.properties
 │           ├── application.yml
 │           ├── banner.txt
@@ -138,9 +148,6 @@ The project (a.k.a. project directory) has a particular directory structure. A r
 
 - `models` — to hold our entities;
 - `repositories` — to communicate with the database;
-- `services` — to hold our business logic;
-- `security` — security configuration;
-- `controllers` — to listen to the client;
 - `resources/` - Contains all the static resources, templates and property files.
 - `resources/application.properties` - It contains application-wide properties. Spring reads the properties defined in this file to configure your application. You can define server’s default port, server’s context path, database URLs etc, in this file.
 
