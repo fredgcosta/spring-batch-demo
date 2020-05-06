@@ -23,6 +23,8 @@ services:
       MYSQL_ROOT_PASSWORD: rootpw
     expose:
       - 3306
+    networks:
+      - scdf-net
 
   kafka-broker:
     image: confluentinc/cp-kafka:5.5.0
@@ -36,6 +38,8 @@ services:
       - KAFKA_OFFSETS_TOPIC_REPLICATION_FACTOR=1
     depends_on:
       - zookeeper
+    networks:
+      - scdf-net
 
   zookeeper:
     image: confluentinc/cp-zookeeper:5.5.0
@@ -44,10 +48,13 @@ services:
       - "2181"
     environment:
       - ZOOKEEPER_CLIENT_PORT=2181
+    networks:
+      - scdf-net
 
   dataflow-server:
     # image: springcloud/spring-cloud-dataflow-server:${DATAFLOW_VERSION:?DATAFLOW_VERSION is not set!}
-    image: springcloud/spring-cloud-dataflow-server:latest
+    build: ./
+    image: springcloud/spring-cloud-dataflow-server:local
     container_name: dataflow-server
     ports:
       - "9393:9393"
@@ -66,6 +73,8 @@ services:
     entrypoint: "./wait-for-it.sh mysql:3306 -- java -jar /maven/spring-cloud-dataflow-server.jar"
     volumes:
       - ${HOST_MOUNT_PATH:-.}:${DOCKER_MOUNT_PATH:-/root/scdf}
+    networks:
+      - scdf-net
 
   app-import:
     image: springcloud/openjdk:2.0.1.RELEASE
@@ -79,6 +88,8 @@ services:
         echo 'Stream apps imported'
         wget -qO- 'http://dataflow-server:9393/apps' --post-data='uri=${TASK_APPS_URI:-https://dataflow.spring.io/task-maven-latest&force=true}';
         echo 'Task apps imported'"
+    networks:
+      - scdf-net
 
   skipper-server:
     image: springcloud/spring-cloud-skipper-server:${SKIPPER_VERSION:?SKIPPER_VERSION is not set!}
@@ -96,3 +107,13 @@ services:
     entrypoint: "./wait-for-it.sh mysql:3306 -- java -Djava.security.egd=file:/dev/./urandom -jar /spring-cloud-skipper-server.jar"
     volumes:
       - ${HOST_MOUNT_PATH:-.}:${DOCKER_MOUNT_PATH:-/root/scdf}
+    networks:
+      - scdf-net
+
+networks:
+  scdf-net:
+    name: scdf-net
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 192.168.145.0/24
