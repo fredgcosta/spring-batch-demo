@@ -39,7 +39,7 @@ public class BatchConfiguration {
 
   @Bean
   @StepScope
-  public FlatFileItemReader<Transaction> flatFileItemReader(
+  public FlatFileItemReader<Transaction> reader(
       @Value("#{jobParameters['baseDir'] ?: '/input/'}") final String baseDir,
       @Value("#{jobParameters['fileName'] ?: 'exemplo-sou-java-10.txt' }") final String fileName) {
 
@@ -54,13 +54,25 @@ public class BatchConfiguration {
   }
 
   @Bean
-  public Step chunkletStep(TransactionRepository transactionRepository) {
+  @StepScope
+  public TransactionItemProcessor processor() {
+    return new TransactionItemProcessor();
+  }
+
+  @Bean
+  @StepScope
+  public TransactionItemWriter writer(@Autowired TransactionRepository transactionRepository) {
+    return new TransactionItemWriter(transactionRepository);
+  }
+
+  @Bean
+  public Step chunkletStep() {
     return stepBuilderFactory.get("transactionProcessingStep")
         .<Transaction, Transaction> chunk(CHUNK_SIZE)
-        .reader(flatFileItemReader(null, null))
-        .processor(new TransactionItemProcessor())
-        .writer(new TransactionItemWriter(transactionRepository))
-        .stream(flatFileItemReader(null, null)).build();
+        .reader(reader(null, null))
+        .processor(processor())
+        .writer(writer(null))
+        .stream(reader(null, null)).build();
   }
 
   @Bean
@@ -69,12 +81,11 @@ public class BatchConfiguration {
   }
 
   @Bean
-  public Job souJavaJob(@Autowired JobBuilderFactory jobBuilderFactory,
-      @Autowired TransactionRepository transactionRepository) {
+  public Job souJavaJob(@Autowired JobBuilderFactory jobBuilderFactory) {
     return jobBuilderFactory.get("souJavaJob")
         .incrementer(new RunIdIncrementer())
         .start(taskletStep())
-        .next(chunkletStep(transactionRepository))
+        .next(chunkletStep())
         .build();
   }
 }
