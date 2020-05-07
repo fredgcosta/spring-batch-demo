@@ -11,7 +11,7 @@ public class TransactionItemProcessor implements ItemProcessor<Transaction, Tran
     @Override
     public Transaction process(Transaction item) throws Exception {
         // TODO Implementar lógica de processamento
-        log.info(item.toString());
+        log.debug(item.toString());
         item.setField01(item.getField01().toUpperCase());
         item.setField02(item.getField02().toUpperCase());
         item.setField03(item.getField03().toUpperCase());
@@ -28,7 +28,7 @@ public class TransactionItemProcessor implements ItemProcessor<Transaction, Tran
         item.getRegTypeThree().setField02(item.getRegTypeThree().getField02().toUpperCase());
         item.getRegTypeThree().setField03(item.getRegTypeThree().getField03().toUpperCase());
 
-        log.info(item.toString());
+        log.debug(item.toString());
         return item;
     }
 
