@@ -1,31 +1,26 @@
 {
   "annotations": {
-    "list": [
-      {
-        "builtIn": 1,
-        "datasource": "-- Grafana --",
-        "enable": true,
-        "hide": true,
-        "iconColor": "rgba(0, 211, 255, 1)",
-        "name": "Annotations & Alerts",
-        "type": "dashboard"
-      }
-    ]
+    "list": [{
+      "builtIn": 1,
+      "datasource": "-- Grafana --",
+      "enable": true,
+      "hide": true,
+      "iconColor": "rgba(0, 211, 255, 1)",
+      "name": "Annotations & Alerts",
+      "type": "dashboard"
+    }]
   },
   "editable": true,
   "gnetId": null,
   "graphTooltip": 0,
   "id": 5,
   "iteration": 1566398687952,
-  "links": [
-    {
-      "icon": "external link",
-      "tags": [],
-      "type": "dashboards"
-    }
-  ],
-  "panels": [
-    {
+  "links": [{
+    "icon": "external link",
+    "tags": [],
+    "type": "dashboards"
+  }],
+  "panels": [{
       "cacheTimeout": null,
       "colorBackground": false,
       "colorValue": false,
@@ -54,8 +49,7 @@
       "interval": null,
       "links": [],
       "mappingType": 1,
-      "mappingTypes": [
-        {
+      "mappingTypes": [{
           "name": "value to text",
           "value": 1
         },
@@ -73,13 +67,11 @@
       "postfixFontSize": "50%",
       "prefix": "",
       "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
-        }
-      ],
+      "rangeMaps": [{
+        "from": "null",
+        "text": "N/A",
+        "to": "null"
+      }],
       "sparkline": {
         "fillColor": "rgba(31, 118, 189, 0.18)",
         "full": true,
@@ -87,29 +79,25 @@
         "show": true
       },
       "tableColumn": "Value",
-      "targets": [
-        {
-          "expr": "count(count by (task_name,task_execution_id) (spring_cloud_task_seconds_count))",
-          "format": "time_series",
-          "instant": false,
-          "interval": "",
-          "intervalFactor": 1,
-          "refId": "A"
-        }
-      ],
+      "targets": [{
+        "expr": "count(count by (task_name,task_execution_id) (spring_cloud_task_seconds_count))",
+        "format": "time_series",
+        "instant": false,
+        "interval": "",
+        "intervalFactor": 1,
+        "refId": "A"
+      }],
       "thresholds": "",
       "timeFrom": null,
       "timeShift": null,
       "title": "Task Count",
       "type": "singlestat",
       "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
+      "valueMaps": [{
+        "op": "=",
+        "text": "N/A",
+        "value": "null"
+      }],
       "valueName": "total"
     },
     {
@@ -154,16 +142,14 @@
       "spaceLength": 10,
       "stack": false,
       "steppedLine": true,
-      "targets": [
-        {
-          "expr": "spring_cloud_task_active_seconds_active_count",
-          "format": "time_series",
-          "instant": false,
-          "intervalFactor": 1,
-          "legendFormat": "{{task_name}}:{{task_execution_id}}",
-          "refId": "A"
-        }
-      ],
+      "targets": [{
+        "expr": "spring_cloud_task_active_seconds_active_count",
+        "format": "time_series",
+        "instant": false,
+        "intervalFactor": 1,
+        "legendFormat": "{{task_name}}:{{task_execution_id}}",
+        "refId": "A"
+      }],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
@@ -182,8 +168,7 @@
         "show": true,
         "values": []
       },
-      "yaxes": [
-        {
+      "yaxes": [{
           "format": "short",
           "label": null,
           "logBase": 1,
@@ -244,15 +229,13 @@
       "spaceLength": 10,
       "stack": true,
       "steppedLine": false,
-      "targets": [
-        {
-          "expr": "sum(spring_cloud_task_seconds_sum) by (task_name,task_execution_id)",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "{{task_name}}:{{task_execution_id}}",
-          "refId": "A"
-        }
-      ],
+      "targets": [{
+        "expr": "sum(spring_cloud_task_seconds_sum) by (task_name,task_execution_id)",
+        "format": "time_series",
+        "intervalFactor": 1,
+        "legendFormat": "{{task_name}}:{{task_execution_id}}",
+        "refId": "A"
+      }],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
@@ -271,8 +254,7 @@
         "show": true,
         "values": []
       },
-      "yaxes": [
-        {
+      "yaxes": [{
           "format": "s",
           "label": null,
           "logBase": 1,
@@ -323,8 +305,7 @@
       "interval": null,
       "links": [],
       "mappingType": 1,
-      "mappingTypes": [
-        {
+      "mappingTypes": [{
           "name": "value to text",
           "value": 1
         },
@@ -342,13 +323,11 @@
       "postfixFontSize": "50%",
       "prefix": "",
       "prefixFontSize": "50%",
-      "rangeMaps": [
-        {
-          "from": "null",
-          "text": "N/A",
-          "to": "null"
-        }
-      ],
+      "rangeMaps": [{
+        "from": "null",
+        "text": "N/A",
+        "to": "null"
+      }],
       "sparkline": {
         "fillColor": "rgba(31, 118, 189, 0.18)",
         "full": true,
@@ -356,29 +335,25 @@
         "show": true
       },
       "tableColumn": "Value",
-      "targets": [
-        {
-          "expr": "count(count(spring_batch_job_active_seconds_active_count) by (task_name,task_execution_id,name))",
-          "format": "time_series",
-          "instant": false,
-          "interval": "",
-          "intervalFactor": 1,
-          "refId": "A"
-        }
-      ],
+      "targets": [{
+        "expr": "count(count(spring_batch_job_active_seconds_active_count) by (task_name,task_execution_id,name))",
+        "format": "time_series",
+        "instant": false,
+        "interval": "",
+        "intervalFactor": 1,
+        "refId": "A"
+      }],
       "thresholds": "",
       "timeFrom": null,
       "timeShift": null,
       "title": "Job  Count",
       "type": "singlestat",
       "valueFontSize": "80%",
-      "valueMaps": [
-        {
-          "op": "=",
-          "text": "N/A",
-          "value": "null"
-        }
-      ],
+      "valueMaps": [{
+        "op": "=",
+        "text": "N/A",
+        "value": "null"
+      }],
       "valueName": "total"
     },
     {
@@ -420,15 +395,13 @@
       "spaceLength": 10,
       "stack": false,
       "steppedLine": true,
-      "targets": [
-        {
-          "expr": "sum(spring_cloud_task_active_seconds_duration_sum{task_name=~\"$task_name\",task_execution_id=~\"$task_execution_id\"}) by (task_name, task_execution_id)",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "{{task_name}}:{{task_execution_id}}",
-          "refId": "A"
-        }
-      ],
+      "targets": [{
+        "expr": "sum(spring_cloud_task_active_seconds_duration_sum{task_name=~\"$task_name\",task_execution_id=~\"$task_execution_id\"}) by (task_name, task_execution_id)",
+        "format": "time_series",
+        "intervalFactor": 1,
+        "legendFormat": "{{task_name}}:{{task_execution_id}}",
+        "refId": "A"
+      }],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
@@ -447,8 +420,7 @@
         "show": true,
         "values": []
       },
-      "yaxes": [
-        {
+      "yaxes": [{
           "format": "s",
           "label": null,
           "logBase": 1,
@@ -509,15 +481,13 @@
       "spaceLength": 10,
       "stack": false,
       "steppedLine": true,
-      "targets": [
-        {
-          "expr": "sum(spring_batch_job_seconds_max{task_name=~\"$task_name\",name=~\"$job_name\"}) by (task_name,task_execution_id,name)",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "{{task_name}}:{{task_execution_id}}-{{name}}",
-          "refId": "A"
-        }
-      ],
+      "targets": [{
+        "expr": "sum(spring_batch_job_seconds_max{task_name=~\"$task_name\",name=~\"$job_name\"}) by (task_name,task_execution_id,name)",
+        "format": "time_series",
+        "intervalFactor": 1,
+        "legendFormat": "{{task_name}}:{{task_execution_id}}-{{name}}",
+        "refId": "A"
+      }],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
@@ -536,8 +506,7 @@
         "show": true,
         "values": []
       },
-      "yaxes": [
-        {
+      "yaxes": [{
           "format": "s",
           "label": null,
           "logBase": 1,
@@ -594,21 +563,17 @@
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
-      "seriesOverrides": [
-        {}
-      ],
+      "seriesOverrides": [{}],
       "spaceLength": 10,
       "stack": false,
       "steppedLine": false,
-      "targets": [
-        {
-          "expr": "rate(spring_cloud_task_seconds_count[1m])",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "",
-          "refId": "A"
-        }
-      ],
+      "targets": [{
+        "expr": "rate(spring_cloud_task_seconds_count[1m])",
+        "format": "time_series",
+        "intervalFactor": 1,
+        "legendFormat": "",
+        "refId": "A"
+      }],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
@@ -627,8 +592,7 @@
         "show": true,
         "values": []
       },
-      "yaxes": [
-        {
+      "yaxes": [{
           "format": "opm",
           "label": null,
           "logBase": 1,
@@ -685,21 +649,17 @@
       "pointradius": 2,
       "points": false,
       "renderer": "flot",
-      "seriesOverrides": [
-        {}
-      ],
+      "seriesOverrides": [{}],
       "spaceLength": 10,
       "stack": false,
       "steppedLine": false,
-      "targets": [
-        {
-          "expr": "rate(spring_cloud_task_active_seconds_active_count{task_name=~\"$task_name\"}[1m]) ",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "{{task_name}}:{{task_execution_id}}",
-          "refId": "A"
-        }
-      ],
+      "targets": [{
+        "expr": "rate(spring_cloud_task_active_seconds_active_count{task_name=~\"$task_name\"}[1m]) ",
+        "format": "time_series",
+        "intervalFactor": 1,
+        "legendFormat": "{{task_name}}:{{task_execution_id}}",
+        "refId": "A"
+      }],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
@@ -718,8 +678,7 @@
         "show": true,
         "values": []
       },
-      "yaxes": [
-        {
+      "yaxes": [{
           "format": "opm",
           "label": null,
           "logBase": 1,
@@ -780,15 +739,13 @@
       "spaceLength": 10,
       "stack": false,
       "steppedLine": true,
-      "targets": [
-        {
-          "expr": "rate(spring_batch_job_seconds_max{task_name=\"$task_name\",name=~\"$job_name\"}[1m])",
-          "format": "time_series",
-          "intervalFactor": 1,
-          "legendFormat": "{{task_name}}-{{name}}",
-          "refId": "A"
-        }
-      ],
+      "targets": [{
+        "expr": "rate(spring_batch_job_seconds_max{task_name=\"$task_name\",name=~\"$job_name\"}[1m])",
+        "format": "time_series",
+        "intervalFactor": 1,
+        "legendFormat": "{{task_name}}-{{name}}",
+        "refId": "A"
+      }],
       "thresholds": [],
       "timeFrom": null,
       "timeRegions": [],
@@ -807,8 +764,7 @@
         "show": true,
         "values": []
       },
-      "yaxes": [
-        {
+      "yaxes": [{
           "format": "ops",
           "label": null,
           "logBase": 1,
@@ -836,8 +792,7 @@
   "style": "dark",
   "tags": [],
   "templating": {
-    "list": [
-      {
+    "list": [{
         "allValue": null,
         "current": {
           "text": "task999",
