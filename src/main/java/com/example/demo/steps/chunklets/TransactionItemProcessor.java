@@ -11,32 +11,24 @@ public class TransactionItemProcessor implements ItemProcessor<Transaction, Tran
     @Override
     public Transaction process(Transaction item) throws Exception {
         // TODO Implementar lógica de processamento
-        log.info(item.toString());
+        log.debug(item.toString());
         item.setField01(item.getField01().toUpperCase());
         item.setField02(item.getField02().toUpperCase());
         item.setField03(item.getField03().toUpperCase());
-        item.setField04(item.getField04().toUpperCase());
-        item.setField05(item.getField05().toUpperCase());
 
-        item.getRegTypeOne().setField11(item.getRegTypeOne().getField11().toUpperCase());
-        item.getRegTypeOne().setField12(item.getRegTypeOne().getField12().toUpperCase());
-        item.getRegTypeOne().setField13(item.getRegTypeOne().getField13().toUpperCase());
-        item.getRegTypeOne().setField14(item.getRegTypeOne().getField14().toUpperCase());
-        item.getRegTypeOne().setField15(item.getRegTypeOne().getField15().toUpperCase());
+        item.getRegTypeOne().setField01(item.getRegTypeOne().getField01().toUpperCase());
+        item.getRegTypeOne().setField02(item.getRegTypeOne().getField02().toUpperCase());
+        item.getRegTypeOne().setField03(item.getRegTypeOne().getField03().toUpperCase());
 
-        item.getRegTypeTwo().setField21(item.getRegTypeTwo().getField21().toUpperCase());
-        item.getRegTypeTwo().setField22(item.getRegTypeTwo().getField22().toUpperCase());
-        item.getRegTypeTwo().setField23(item.getRegTypeTwo().getField23().toUpperCase());
-        item.getRegTypeTwo().setField24(item.getRegTypeTwo().getField24().toUpperCase());
-        item.getRegTypeTwo().setField25(item.getRegTypeTwo().getField25().toUpperCase());
+        item.getRegTypeTwo().setField01(item.getRegTypeTwo().getField01().toUpperCase());
+        item.getRegTypeTwo().setField02(item.getRegTypeTwo().getField02().toUpperCase());
+        item.getRegTypeTwo().setField03(item.getRegTypeTwo().getField03().toUpperCase());
 
-        item.getRegTypeThree().setField31(item.getRegTypeThree().getField31().toUpperCase());
-        item.getRegTypeThree().setField32(item.getRegTypeThree().getField32().toUpperCase());
-        item.getRegTypeThree().setField33(item.getRegTypeThree().getField33().toUpperCase());
-        item.getRegTypeThree().setField34(item.getRegTypeThree().getField34().toUpperCase());
-        item.getRegTypeThree().setField35(item.getRegTypeThree().getField35().toUpperCase());
+        item.getRegTypeThree().setField01(item.getRegTypeThree().getField01().toUpperCase());
+        item.getRegTypeThree().setField02(item.getRegTypeThree().getField02().toUpperCase());
+        item.getRegTypeThree().setField03(item.getRegTypeThree().getField03().toUpperCase());
 
-        log.info(item.toString());
+        log.debug(item.toString());
         return item;
     }
 
