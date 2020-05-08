@@ -1,4 +1,4 @@
-FROM springcloud/spring-cloud-dataflow-server:latest
+FROM springcloud/spring-cloud-dataflow-server:2.5.0.RELEASE
 
 RUN rm -rf /opt/openjdk && \
     cd /opt && \
