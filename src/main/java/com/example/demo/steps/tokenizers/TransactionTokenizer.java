@@ -1,7 +1,7 @@
 package com.example.demo.steps.tokenizers;
 
-import org.springframework.batch.item.file.transform.FixedLengthTokenizer;
-import org.springframework.batch.item.file.transform.Range;
+import org.springframework.batch.infrastructure.item.file.transform.FixedLengthTokenizer;
+import org.springframework.batch.infrastructure.item.file.transform.Range;
 
 public class TransactionTokenizer extends FixedLengthTokenizer {
     public TransactionTokenizer() {

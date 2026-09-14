@@ -1,7 +1,8 @@
 version: "3.8"
 
 # Configuration environment variables:
-# - DATAFLOW_VERSION and SKIPPER_VERSION specify what DataFlow and Skipper image versions to use.
+# - DATAFLOW_VERSION and SKIPPER_VERSION specify what DataFlow and Skipper image versions to use
+#   (default: 2.11.5 / 2.11.5-jdk17, matching the images built by ./Dockerfile).
 # - STREAM_APPS_URI and TASK_APPS_URI are used to specify what Stream and Task applications to pre-register.
 # - HOST_MOUNT_PATH and DOCKER_MOUNT_PATH are used to set the host and docker mount folders.
 #   If not set HOST_MOUNT_PATH defaults to the local host folder where the docker compose is being started.
@@ -76,6 +77,10 @@ services:
     networks:
       - scdf-net
 
+  # NOTA: as URLs padrão (STREAM_APPS_URI/TASK_APPS_URI) redirecionam para descriptors antigos
+  # (ex.: Elston.SR3, apps em Boot 2.x pre-Jakarta) usados apenas para registrar sample apps de
+  # demonstração do SCDF — não afetam o registro/execução do souJavaBsb-task (nosso jar próprio).
+  # Ajuste as variáveis de ambiente para um descriptor mais novo se for usar os sample apps.
   app-import:
     image: springcloud/openjdk:2.0.1.RELEASE
     container_name: dataflow-app-import
@@ -92,7 +97,7 @@ services:
       - scdf-net
 
   skipper-server:
-    image: springcloud/spring-cloud-skipper-server:${SKIPPER_VERSION:?SKIPPER_VERSION is not set!}
+    image: springcloud/spring-cloud-skipper-server:${SKIPPER_VERSION:-2.11.5-jdk17}
     container_name: skipper
     ports:
       - "7577:7577"

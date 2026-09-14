@@ -10,11 +10,13 @@ Delete the sample code, replace with your own and you’re good to go.
 
 * [Maven](https://maven.apache.org/) - Dependency Management
 * [Spring Boot](https://start.spring.io/) - Spring Boot Initializer
-* [OpenJDK](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=hotspot) - Java™ Platform, Standard Edition Development Kit
-* [Spring Boot](https://spring.io/projects/spring-boot) - Framework to ease the bootstrapping and development of new Spring Applications
+* [OpenJDK 17](https://adoptium.net/) - Java™ Platform, Standard Edition Development Kit
+* [Spring Boot 4.0.8](https://spring.io/projects/spring-boot) - Framework to ease the bootstrapping and development of new Spring Applications
+* [Spring Batch 6.0.5](https://spring.io/projects/spring-batch) - Batch processing framework
 * [PostgreSQL](https://www.postgresql.org/) - The World's Most Advanced Open Source Relational Database
 * [git](https://git-scm.com/) - Free and Open-Source distributed version control system
-* [Prometheus](https://prometheus.io/) - Monitoring system and time series database
+* [OpenTelemetry](https://opentelemetry.io/) - Observability framework (metrics/traces via OTLP, replaces the legacy Prometheus RSocket proxy)
+* [Prometheus](https://prometheus.io/) - Monitoring system and time series database (scrapes the OTel Collector's Prometheus exporter)
 * [Lombok](https://projectlombok.org/) - Never write another getter or equals method again, with one annotation your class has a fully featured builder, Automate your logging variables, and much more.
 
 ## External Tools Used
@@ -59,26 +61,26 @@ mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:transport=
 If you want to run the Spring Cloud Data Flow example, run the following commands:
 
 ```shell
-HOST_MOUNT_PATH=~/.m2/repository/ DOCKER_MOUNT_PATH=/root/.m2/repository STREAM_APPS_URI=https://dataflow.spring.io/Einstein-BUILD-SNAPSHOT-stream-applications-kafka-maven SKIPPER_VERSION=2.4.0.RELEASE DATAFLOW_VERSION=2.5.0.RELEASE docker-compose -f ./docker/docker-compose.yml -f ./docker/docker-compose-postgres.yml -f ./docker/docker-compose-prometheus.yml up
+HOST_MOUNT_PATH=~/.m2/repository/ DOCKER_MOUNT_PATH=/root/.m2/repository STREAM_APPS_URI=https://dataflow.spring.io/Einstein-BUILD-SNAPSHOT-stream-applications-kafka-maven SKIPPER_VERSION=2.11.5-jdk17 DATAFLOW_VERSION=2.11.5 docker-compose -f ./docker/docker-compose.yml -f ./docker/docker-compose-postgres.yml -f ./docker/docker-compose-prometheus.yml up
 ```
 
 And to Shut Down the containers:
 
 ```shell
-HOST_MOUNT_PATH=~/.m2/repository/ DOCKER_MOUNT_PATH=/root/.m2/repository STREAM_APPS_URI=https://dataflow.spring.io/Einstein-BUILD-SNAPSHOT-stream-applications-kafka-maven SKIPPER_VERSION=2.4.0.RELEASE DATAFLOW_VERSION=2.5.0.RELEASE docker-compose -f ./docker/docker-compose.yml -f ./docker/docker-compose-postgres.yml -f ./docker/docker-compose-prometheus.yml down
+HOST_MOUNT_PATH=~/.m2/repository/ DOCKER_MOUNT_PATH=/root/.m2/repository STREAM_APPS_URI=https://dataflow.spring.io/Einstein-BUILD-SNAPSHOT-stream-applications-kafka-maven SKIPPER_VERSION=2.11.5-jdk17 DATAFLOW_VERSION=2.11.5 docker-compose -f ./docker/docker-compose.yml -f ./docker/docker-compose-postgres.yml -f ./docker/docker-compose-prometheus.yml down
 ```
 
 ### Tools
 
 To monitor and manage your application
 
-| Tool          | URL                                       | Method |
-| ------------- | ----------------------------------------- | ------ |
-| SCDF Dashboad | `http://localhost:9393/dashboard`         | GET    |
-| Prometheus    | `http://localhost:9090/graph`             | GET    |
-| Grafana       | `http://localhost:3000`                   | GET    |
-| RSocket Proxy | `http://localhost:9096/metrics/connected` | GET    |
-| pgAdmin4      | `http://localhost:80`                     | GET    |
+| Tool             | URL                                       | Method |
+| ---------------- | ----------------------------------------- | ------ |
+| SCDF Dashboad     | `http://localhost:9393/dashboard`         | GET    |
+| Prometheus        | `http://localhost:9090/graph`             | GET    |
+| Grafana           | `http://localhost:3000`                   | GET    |
+| OTel Collector    | `http://localhost:8889/metrics`           | GET    |
+| pgAdmin4          | `http://localhost:80`                     | GET    |
 
 ### URLs
 

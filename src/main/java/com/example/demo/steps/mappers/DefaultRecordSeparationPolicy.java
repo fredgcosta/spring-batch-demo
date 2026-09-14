@@ -1,6 +1,6 @@
 package com.example.demo.steps.mappers;
 
-import org.springframework.batch.item.file.separator.RecordSeparatorPolicy;
+import org.springframework.batch.infrastructure.item.file.separator.RecordSeparatorPolicy;
 
 public class DefaultRecordSeparationPolicy implements RecordSeparatorPolicy {
     private boolean isFirstRead = true;
@@ -32,7 +32,7 @@ public class DefaultRecordSeparationPolicy implements RecordSeparatorPolicy {
     /**
      * Pass the record through. Do nothing.
      * 
-     * @see org.springframework.batch.item.file.separator.RecordSeparatorPolicy#postProcess(java.lang.String)
+     * @see org.springframework.batch.infrastructure.item.file.separator.RecordSeparatorPolicy#postProcess(java.lang.String)
      */
     @Override
     public String postProcess(String record) {
@@ -50,7 +50,7 @@ public class DefaultRecordSeparationPolicy implements RecordSeparatorPolicy {
     /**
      * Pass the line through. Do nothing.
      * 
-     * @see org.springframework.batch.item.file.separator.RecordSeparatorPolicy#preProcess(java.lang.String)
+     * @see org.springframework.batch.infrastructure.item.file.separator.RecordSeparatorPolicy#preProcess(java.lang.String)
      */
     @Override
     public String preProcess(String record) {

@@ -8,22 +8,23 @@ import com.example.demo.steps.mappers.DefaultCompositeLineMapper;
 import com.example.demo.steps.mappers.DefaultRecordSeparationPolicy;
 import com.example.demo.steps.tasklets.FileDownloadTasklet;
 
-import org.springframework.batch.core.Job;
-import org.springframework.batch.core.Step;
 import org.springframework.batch.core.configuration.annotation.EnableBatchProcessing;
-import org.springframework.batch.core.configuration.annotation.JobBuilderFactory;
-import org.springframework.batch.core.configuration.annotation.StepBuilderFactory;
 import org.springframework.batch.core.configuration.annotation.StepScope;
-import org.springframework.batch.core.launch.support.RunIdIncrementer;
-import org.springframework.batch.item.file.FlatFileItemReader;
-import org.springframework.batch.item.file.builder.FlatFileItemReaderBuilder;
+import org.springframework.batch.core.job.Job;
+import org.springframework.batch.core.job.builder.JobBuilder;
+import org.springframework.batch.core.job.parameters.RunIdIncrementer;
+import org.springframework.batch.core.repository.JobRepository;
+import org.springframework.batch.core.step.Step;
+import org.springframework.batch.core.step.builder.StepBuilder;
+import org.springframework.batch.infrastructure.item.file.FlatFileItemReader;
+import org.springframework.batch.infrastructure.item.file.builder.FlatFileItemReaderBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cloud.task.configuration.EnableTask;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
-
+import org.springframework.transaction.PlatformTransactionManager;
 import lombok.extern.slf4j.Slf4j;
 
 @Configuration
@@ -33,9 +34,6 @@ import lombok.extern.slf4j.Slf4j;
 public class BatchConfiguration {
 
   private static final int CHUNK_SIZE = 2500;
-
-  @Autowired
-  public StepBuilderFactory stepBuilderFactory;
 
   @Bean
   @StepScope
@@ -66,9 +64,10 @@ public class BatchConfiguration {
   }
 
   @Bean
-  public Step chunkletStep() {
-    return stepBuilderFactory.get("transactionProcessingStep")
+  public Step chunkletStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+    return new StepBuilder("transactionProcessingStep", jobRepository)
         .<Transaction, Transaction> chunk(CHUNK_SIZE)
+        .transactionManager(transactionManager)
         .reader(reader(null, null))
         .processor(processor())
         .writer(writer(null))
@@ -76,16 +75,16 @@ public class BatchConfiguration {
   }
 
   @Bean
-  public Step taskletStep() {
-    return stepBuilderFactory.get("fileDownloadingStep").tasklet(new FileDownloadTasklet()).build();
+  public Step taskletStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+    return new StepBuilder("fileDownloadingStep", jobRepository).tasklet(new FileDownloadTasklet(), transactionManager).build();
   }
 
   @Bean
-  public Job souJavaJob(@Autowired JobBuilderFactory jobBuilderFactory) {
-    return jobBuilderFactory.get("souJavaJob")
+  public Job souJavaJob(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
+    return new JobBuilder("souJavaJob", jobRepository)
         .incrementer(new RunIdIncrementer())
-        .start(taskletStep())
-        .next(chunkletStep())
+        .start(taskletStep(jobRepository, transactionManager))
+        .next(chunkletStep(jobRepository, transactionManager))
         .build();
   }
 }

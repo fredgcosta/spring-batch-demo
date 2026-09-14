@@ -1,6 +1,6 @@
 package com.example.demo.models;
 
-import javax.persistence.Entity;
+import jakarta.persistence.Entity;
 
 import lombok.Data;
 import lombok.EqualsAndHashCode;

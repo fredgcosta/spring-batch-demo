@@ -2,7 +2,7 @@ package com.example.demo.steps.chunklets;
 
 import com.example.demo.models.Transaction;
 
-import org.springframework.batch.item.ItemProcessor;
+import org.springframework.batch.infrastructure.item.ItemProcessor;
 
 import lombok.extern.slf4j.Slf4j;
 
