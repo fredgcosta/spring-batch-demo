@@ -2,9 +2,12 @@ version: "3.8"
 
 # Reconfigures the default docker-compose.yml to replace MySQL by Postgres
 # Usage: docker-compose -f ./docker-compose.yml -f ./docker-compose-postgres.yml up
+# NOTA (fallback Requisito 5.5): este override nao fixa tags de imagem nem defaults de
+# SKIPPER_VERSION/DATAFLOW_VERSION; as imagens SCDF/Skipper herdadas do docker-compose.yml
+# permanecem em jdk17 por nao existir tag com sufixo Java 25. Ver a nota no README.md.
 services:
   mysql:
-    entrypoint: ["echo", "MySQL service is disabled"]
+    entrypoint: [ "echo", "MySQL service is disabled" ]
 
   postgres:
     image: postgres:12.2-alpine

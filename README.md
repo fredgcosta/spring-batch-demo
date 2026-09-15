@@ -10,7 +10,7 @@ Delete the sample code, replace with your own and you’re good to go.
 
 * [Maven](https://maven.apache.org/) - Dependency Management
 * [Spring Boot](https://start.spring.io/) - Spring Boot Initializer
-* [OpenJDK 17](https://adoptium.net/) - Java™ Platform, Standard Edition Development Kit
+* [Java 25](https://adoptium.net/) - Java™ Platform, Standard Edition Development Kit (alvo de build/execução da aplicação)
 * [Spring Boot 4.0.8](https://spring.io/projects/spring-boot) - Framework to ease the bootstrapping and development of new Spring Applications
 * [Spring Batch 6.0.5](https://spring.io/projects/spring-batch) - Batch processing framework
 * [PostgreSQL](https://www.postgresql.org/) - The World's Most Advanced Open Source Relational Database
@@ -57,6 +57,21 @@ Debug Mode
 ```shell
 mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005"  
 ```
+
+> ### ⚠️ Nota: Java 25 e as imagens do Spring Cloud Data Flow (fallback do Requisito 5.5)
+>
+> A **aplicação** passou a ter como alvo de build e execução o **Java 25**. No entanto, as imagens
+> Docker do **Spring Cloud Data Flow** (`springcloud/spring-cloud-dataflow-server`) e do **Skipper**
+> (`springcloud/spring-cloud-skipper-server`) **não publicam (ainda) uma tag com sufixo Java 25** — o
+> maior sufixo de JDK disponível no Docker Hub é `-jdk17`. Por isso, o `docker/Dockerfile`, os arquivos
+> `docker/docker-compose*.yml` e os comandos abaixo **permanecem intencionalmente na tag `2.11.5-jdk17`**.
+>
+> Esse é o **fallback previsto no Requisito 5.5**: quando não existe tag de Java 25 para uma imagem, a
+> referência é mantida inalterada e a indisponibilidade é registrada aqui. Como consequência, a
+> **paridade entre o JDK do build (Java 25) e o JDK do container SCDF (jdk17) não pode ser atingida no
+> momento** para o stack do Spring Cloud Data Flow (caveat do Requisito 5.4). Assim que uma tag com
+> sufixo Java 25 for publicada para essas imagens, basta atualizar o `Dockerfile`, os `docker-compose*.yml`
+> e os comandos abaixo.
 
 If you want to run the Spring Cloud Data Flow example, run the following commands:
 

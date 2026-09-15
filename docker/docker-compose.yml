@@ -3,6 +3,10 @@ version: "3.8"
 # Configuration environment variables:
 # - DATAFLOW_VERSION and SKIPPER_VERSION specify what DataFlow and Skipper image versions to use
 #   (default: 2.11.5 / 2.11.5-jdk17, matching the images built by ./Dockerfile).
+# NOTA (fallback Requisito 5.5): as imagens do Spring Cloud Data Flow / Skipper nao publicam tag
+# com sufixo Java 25 (o maximo disponivel e -jdk17). As tags/defaults abaixo permanecem em jdk17
+# de proposito, mesmo com o build da aplicacao tendo como alvo o Java 25. Ver a nota
+# "Java 25 e as imagens do Spring Cloud Data Flow" no README.md.
 # - STREAM_APPS_URI and TASK_APPS_URI are used to specify what Stream and Task applications to pre-register.
 # - HOST_MOUNT_PATH and DOCKER_MOUNT_PATH are used to set the host and docker mount folders.
 #   If not set HOST_MOUNT_PATH defaults to the local host folder where the docker compose is being started.
@@ -97,6 +101,8 @@ services:
       - scdf-net
 
   skipper-server:
+    # NOTA (fallback Requisito 5.5): sem tag jdk25 publicada para o Skipper, o default permanece
+    # em 2.11.5-jdk17. Ver a nota no README.md sobre as imagens do Spring Cloud Data Flow.
     image: springcloud/spring-cloud-skipper-server:${SKIPPER_VERSION:-2.11.5-jdk17}
     container_name: skipper
     ports:
