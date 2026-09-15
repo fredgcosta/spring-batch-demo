@@ -122,13 +122,13 @@ As tarefas respeitam a ordenação dos três caminhos de aquisição do artefato
     - Executar o job sobre `exemplo-sou-java-10.txt` (via teste de integração automatizado com `spring-batch-test`/H2) e confirmar a persistência de todas as `Transaction` e das `RegType*` correspondentes com id compartilhado
     - _Requirements: 6.5, 6.6_
 
-- [ ] 11. Revisar o Diff_Migracao e registrar o commit
-  - [ ]* 11.1 Revisar o diff e ajustar alterações indesejadas
+- [x] 11. Revisar o Diff_Migracao e registrar o commit
+  - [x]* 11.1 Revisar o diff e ajustar alterações indesejadas
     - Apresentar todas as alterações pendentes (`git status` + `git diff` / patch do rewrite) para revisão, impedindo commit automático
     - Reverter/ajustar seletivamente alterações indesejadas (`git restore -p` ou edição pontual) preservando as demais
     - _Requirements: 8.1, 8.2, 8.5_
 
-  - [ ] 11.2 Registrar um único commit convencional com o gate de build+testes
+  - [x] 11.2 Registrar um único commit convencional com o gate de build+testes
     - Confirmar build (`./mvnw clean package`) e testes (`./mvnw test`) verdes sobre o estado do diff antes de commitar; se falharem, bloquear o commit e indicar a falha mantendo as alterações não commitadas
     - Registrar exclusivamente as alterações aprovadas em um único commit com mensagem iniciando por prefixo de conventional-commit (`chore:`)
     - _Requirements: 8.3, 8.4_
