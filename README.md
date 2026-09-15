@@ -15,8 +15,8 @@ Delete the sample code, replace with your own and you’re good to go.
 * [Spring Batch 6.0.5](https://spring.io/projects/spring-batch) - Batch processing framework
 * [PostgreSQL](https://www.postgresql.org/) - The World's Most Advanced Open Source Relational Database
 * [git](https://git-scm.com/) - Free and Open-Source distributed version control system
-* [OpenTelemetry](https://opentelemetry.io/) - Observability framework (metrics/traces via OTLP, replaces the legacy Prometheus RSocket proxy)
-* [Prometheus](https://prometheus.io/) - Monitoring system and time series database (scrapes the OTel Collector's Prometheus exporter)
+* [OpenTelemetry](https://opentelemetry.io/) - Observability framework; the app exports metrics and traces via OTLP (replaces the legacy Prometheus RSocket proxy)
+* [Grafana OTel-LGTM](https://github.com/grafana/docker-otel-lgtm) - All-in-one observability backend (OTel Collector + Prometheus + Tempo + Loki + Grafana) that receives OTLP; Prometheus/Tempo/Loki are embedded, not separate services
 * [Lombok](https://projectlombok.org/) - Never write another getter or equals method again, with one annotation your class has a fully featured builder, Automate your logging variables, and much more.
 
 ## External Tools Used
@@ -91,11 +91,12 @@ To monitor and manage your application
 
 | Tool             | URL                                       | Method |
 | ---------------- | ----------------------------------------- | ------ |
-| SCDF Dashboad     | `http://localhost:9393/dashboard`         | GET    |
-| Prometheus        | `http://localhost:9090/graph`             | GET    |
-| Grafana           | `http://localhost:3000`                   | GET    |
-| OTel Collector    | `http://localhost:8889/metrics`           | GET    |
-| pgAdmin4          | `http://localhost:80`                     | GET    |
+| SCDF Dashboad        | `http://localhost:9393/dashboard`           | GET    |
+| Prometheus (LGTM)    | `http://localhost:9090/graph`               | GET    |
+| Grafana (LGTM)       | `http://localhost:3000` (login admin/admin) | GET    |
+| OTLP (LGTM ingest)   | `http://localhost:4318` (HTTP) / 4317 (gRPC)| POST   |
+| Tempo (traces)       | `http://localhost:3200`                     | GET    |
+| pgAdmin4             | `http://localhost:80`                       | GET    |
 
 ### URLs
 
