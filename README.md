@@ -76,13 +76,13 @@ mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:transport=
 If you want to run the Spring Cloud Data Flow example, run the following commands:
 
 ```shell
-HOST_MOUNT_PATH=~/.m2/repository/ DOCKER_MOUNT_PATH=/root/.m2/repository STREAM_APPS_URI=https://dataflow.spring.io/Einstein-BUILD-SNAPSHOT-stream-applications-kafka-maven SKIPPER_VERSION=2.11.5-jdk17 DATAFLOW_VERSION=2.11.5 docker-compose -f ./docker/docker-compose.yml -f ./docker/docker-compose-postgres.yml -f ./docker/docker-compose-prometheus.yml up
+HOST_MOUNT_PATH=~/.m2/repository/ DOCKER_MOUNT_PATH=/root/.m2/repository STREAM_APPS_URI=https://dataflow.spring.io/Einstein-BUILD-SNAPSHOT-stream-applications-kafka-maven SKIPPER_VERSION=2.11.5-jdk17 DATAFLOW_VERSION=2.11.5 docker-compose -f ./docker/docker-compose.yml -f ./docker/docker-compose-postgres.yml -f ./docker/docker-compose-otel-lgtm.yml up
 ```
 
 And to Shut Down the containers:
 
 ```shell
-HOST_MOUNT_PATH=~/.m2/repository/ DOCKER_MOUNT_PATH=/root/.m2/repository STREAM_APPS_URI=https://dataflow.spring.io/Einstein-BUILD-SNAPSHOT-stream-applications-kafka-maven SKIPPER_VERSION=2.11.5-jdk17 DATAFLOW_VERSION=2.11.5 docker-compose -f ./docker/docker-compose.yml -f ./docker/docker-compose-postgres.yml -f ./docker/docker-compose-prometheus.yml down
+HOST_MOUNT_PATH=~/.m2/repository/ DOCKER_MOUNT_PATH=/root/.m2/repository STREAM_APPS_URI=https://dataflow.spring.io/Einstein-BUILD-SNAPSHOT-stream-applications-kafka-maven SKIPPER_VERSION=2.11.5-jdk17 DATAFLOW_VERSION=2.11.5 docker-compose -f ./docker/docker-compose.yml -f ./docker/docker-compose-postgres.yml -f ./docker/docker-compose-otel-lgtm.yml down
 ```
 
 ### Tools
