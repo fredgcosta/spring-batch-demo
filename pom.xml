@@ -21,15 +21,6 @@
          org.projectlombok:lombok quanto no annotationProcessorPaths do
          maven-compiler-plugin, garantindo alinhamento entre ambos (Req. 3.3). -->
     <lombok.version>1.18.48</lombok.version>
-    <!-- OpenRewrite: par compatível que publica a recipe UpgradeToJava25.
-         Caminho B (fallback): as versões 6.48.0/3.44.0 só existem no Code_Genome_Repository
-         autenticado (e seu build-from-source depende do rewrite-core 8.92.x, também exclusivo
-         do code-genome), portanto não são resolvíveis sem credenciais. Rebaixado para o par
-         público equivalente do Maven Central, que já define a recipe UpgradeToJava25:
-         rewrite-maven-plugin 6.46.1 (rewrite-core 8.89.0) + rewrite-migrate-java 3.42.1.
-         Ver docs/spring-batch-6.0.5-upgrade-spec.md. -->
-    <rewrite-maven-plugin.version>6.46.1</rewrite-maven-plugin.version>
-    <rewrite-migrate-java.version>3.42.1</rewrite-migrate-java.version>
     <!-- jqwik: biblioteca de property-based testing integrada ao JUnit Platform.
          Não é gerenciada pelo BOM do Spring Boot, por isso a versão é fixada aqui.
          Usada pelos testes de propriedade do souJavaJob (tarefas 8.2/8.3). -->
@@ -165,24 +156,6 @@
           </annotationProcessorPaths>
         </configuration>
       </plugin>
-      <!-- OpenRewrite: migração automatizada Java 17 -> Java 25 via recipe UpgradeToJava25 -->
-      <plugin>
-        <groupId>org.openrewrite.maven</groupId>
-        <artifactId>rewrite-maven-plugin</artifactId>
-        <version>${rewrite-maven-plugin.version}</version>
-        <configuration>
-          <activeRecipes>
-            <recipe>org.openrewrite.java.migrate.UpgradeToJava25</recipe>
-          </activeRecipes>
-        </configuration>
-        <dependencies>
-          <dependency>
-            <groupId>org.openrewrite.recipe</groupId>
-            <artifactId>rewrite-migrate-java</artifactId>
-            <version>${rewrite-migrate-java.version}</version>
-          </dependency>
-        </dependencies>
-      </plugin>
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
         <artifactId>maven-dependency-plugin</artifactId>
@@ -211,27 +184,12 @@
       <name>Spring Milestones</name>
       <url>https://repo.spring.io/milestone</url>
     </repository>
-    <!-- Code Genome Project: distribui a Recipe_UpgradeToJava25 (Moderne Source Available License).
-         Exige autenticacao (usuario/e-mail + token). As credenciais NAO sao commitadas aqui;
-         configure o <server id="code-genome"> no seu ~/.m2/settings.xml (ver settings.xml.example). -->
-    <repository>
-      <id>code-genome</id>
-      <name>Code Genome Project</name>
-      <url>https://artifacts.codegenomeproject.org/maven</url>
-    </repository>
   </repositories>
   <pluginRepositories>
     <pluginRepository>
       <id>spring-milestones</id>
       <name>Spring Milestones</name>
       <url>https://repo.spring.io/milestone</url>
-    </pluginRepository>
-    <!-- Code Genome Project (mesmo repositorio autenticado) para resolver o rewrite-maven-plugin
-         e a recipe quando distribuidos por aqui. Ver settings.xml.example. -->
-    <pluginRepository>
-      <id>code-genome</id>
-      <name>Code Genome Project</name>
-      <url>https://artifacts.codegenomeproject.org/maven</url>
     </pluginRepository>
   </pluginRepositories>
 </project>
