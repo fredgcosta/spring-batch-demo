@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>4.0.8</version>
+    <version>4.1.1</version>
     <relativePath />
   </parent>
   <groupId>com.example</groupId>
@@ -24,7 +24,7 @@
     <!-- jqwik: biblioteca de property-based testing integrada ao JUnit Platform.
          Não é gerenciada pelo BOM do Spring Boot, por isso a versão é fixada aqui.
          Usada pelos testes de propriedade do souJavaJob (tarefas 8.2/8.3). -->
-    <jqwik.version>1.9.3</jqwik.version>
+    <jqwik.version>1.10.1</jqwik.version>
   </properties>
   <dependencies>
     <dependency>
@@ -56,6 +56,12 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
     </dependency>
+    <!-- Necessário para o endpoint 'configprops' do Actuator serializar tipos java.time.
+         Não vem transitivamente sem um starter web no Spring Boot 4; versão gerenciada pelo BOM. -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jsr310</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
@@ -78,23 +84,33 @@
       <scope>test</scope>
     </dependency>
 
-    <!-- OpenTelemetry metrics/tracing export via OTLP (substitui o antigo Prometheus RSocket Proxy) -->
+    <!-- Starter oficial de OpenTelemetry do time Spring (Boot 4+). Agrega o SDK OTel autoconfigurado,
+         o micrometer-registry-otlp (métricas) e o micrometer-tracing-bridge-otel (traces), e — o mais
+         importante aqui — registra o Tracer no ObservationRegistry, o que popula o MDC com traceId/spanId.
+         Substitui a montagem manual das três dependências OTel usadas antes. -->
     <dependency>
-      <groupId>io.micrometer</groupId>
-      <artifactId>micrometer-registry-otlp</artifactId>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-opentelemetry</artifactId>
     </dependency>
+    <!-- Appender OTel para Logback: envia os eventos de log para a API OpenTelemetry, permitindo
+         exportar logs via OTLP. Versão fixada (sufixo -alpha; não há release estável) e pareada
+         com o OTel SDK 1.62.0 trazido pelo starter — instrumentation 2.10.0 ~ SDK 1.62.0. -->
     <dependency>
-      <groupId>io.micrometer</groupId>
-      <artifactId>micrometer-tracing-bridge-otel</artifactId>
+      <groupId>io.opentelemetry.instrumentation</groupId>
+      <artifactId>opentelemetry-logback-appender-1.0</artifactId>
+      <version>2.10.0-alpha</version>
     </dependency>
+    <!-- API incubadora do OTel, exigida pelo logback-appender ao mapear atributos do log record
+         (ExtendedSdkLogRecordBuilder). Não é gerenciada pelo BOM; versão pareada com o SDK 1.62.0. -->
     <dependency>
       <groupId>io.opentelemetry</groupId>
-      <artifactId>opentelemetry-exporter-otlp</artifactId>
+      <artifactId>opentelemetry-api-incubator</artifactId>
+      <version>1.62.0-alpha</version>
     </dependency>
     <dependency>
       <groupId>net.logstash.logback</groupId>
       <artifactId>logstash-logback-encoder</artifactId>
-      <version>8.1</version>
+      <version>9.0</version>
     </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>

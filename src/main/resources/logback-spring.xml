@@ -4,10 +4,7 @@
     <contextName>${spring.application.name}</contextName>
 
     <include resource="org/springframework/boot/logging/logback/defaults.xml" />
-    <appender name="ASYNC" class="net.logstash.logback.appender.LoggingEventAsyncDisruptorAppender">
-        <ringBufferSize>131072</ringBufferSize>
-        <waitStrategyType>sleeping</waitStrategyType>
-        <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
+    <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
             <encoder class="net.logstash.logback.encoder.LoggingEventCompositeJsonEncoder">
                 <providers>
                     <contextName>
@@ -32,7 +29,24 @@
                     <threadName>
                         <fieldName>thread</fieldName>
                     </threadName>
-                    <mdc />
+                    <!-- Demais entradas de MDC como campos JSON. traceId/spanId são
+                         emitidos separadamente abaixo como trace_id/span_id. -->
+                    <mdc>
+                        <excludeMdcKeyName>traceId</excludeMdcKeyName>
+                        <excludeMdcKeyName>spanId</excludeMdcKeyName>
+                    </mdc>
+                    <!-- IDs de trace/span (MDC populado pelo bridge Micrometer/OTel) expostos como
+                         campos dedicados em snake_case para correlação com traces no Grafana/Tempo.
+                         omitEmptyFields evita poluir logs sem trace ativo. -->
+                    <pattern>
+                        <omitEmptyFields>true</omitEmptyFields>
+                        <pattern>
+                            {
+                            "trace_id": "%mdc{traceId:-}",
+                            "span_id": "%mdc{spanId:-}"
+                            }
+                        </pattern>
+                    </pattern>
                     <arguments>
                         <includeNonStructuredArguments>false</includeNonStructuredArguments>
                     </arguments>
@@ -49,12 +63,28 @@
                     </message>
                 </providers>
             </encoder>
-        </appender>
     </appender>
 
-    <!-- <include resource="org/springframework/boot/logging/logback/console-appender.xml" /> -->
+    <appender name="ASYNC" class="net.logstash.logback.appender.LoggingEventAsyncDisruptorAppender">
+        <ringBufferSize>131072</ringBufferSize>
+        <waitStrategyType>sleeping</waitStrategyType>
+        <appender-ref ref="CONSOLE" />
+    </appender>
+
+    <!-- Envia os eventos de log para a API OpenTelemetry (exportados via OTLP quando um endpoint
+         de logs está configurado). Captura atributos de MDC, marker, key-value pairs e a exceção
+         para que os logs cheguem estruturados ao backend (ex.: Loki no stack LGTM).
+         Fica ligado direto na raiz (não atrás do ASYNC): o contexto de trace vive em ThreadLocal e
+         precisa ser lido na thread que gera o log, não na thread do disruptor. -->
+    <appender name="OTEL" class="io.opentelemetry.instrumentation.logback.appender.v1_0.OpenTelemetryAppender">
+        <captureCodeAttributes>true</captureCodeAttributes>
+        <captureMarkerAttribute>true</captureMarkerAttribute>
+        <captureKeyValuePairAttributes>true</captureKeyValuePairAttributes>
+        <captureMdcAttributes>*</captureMdcAttributes>
+    </appender>
 
     <root level="INFO">
         <appender-ref ref="ASYNC" />
+        <appender-ref ref="OTEL" />
     </root>
 </configuration>

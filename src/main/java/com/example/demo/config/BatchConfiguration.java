@@ -25,6 +25,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.transaction.PlatformTransactionManager;
+import io.micrometer.observation.ObservationRegistry;
 import lombok.extern.slf4j.Slf4j;
 
 @Configuration
@@ -34,6 +35,18 @@ import lombok.extern.slf4j.Slf4j;
 public class BatchConfiguration {
 
   private static final int CHUNK_SIZE = 2500;
+
+  // ObservationRegistry fornecido pelo Micrometer/Boot. Ao registrá-lo no job e
+  // nos steps,
+  // o Spring Batch cria observações (spans) para a execução, o que faz o bridge
+  // OTel
+  // popular o MDC com traceId/spanId — expostos como trace_id/span_id nos logs
+  // JSON.
+  private final ObservationRegistry observationRegistry;
+
+  public BatchConfiguration(ObservationRegistry observationRegistry) {
+    this.observationRegistry = observationRegistry;
+  }
 
   @Bean
   @StepScope
@@ -66,7 +79,8 @@ public class BatchConfiguration {
   @Bean
   public Step chunkletStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
     return new StepBuilder("transactionProcessingStep", jobRepository)
-        .<Transaction, Transaction> chunk(CHUNK_SIZE)
+        .observationRegistry(observationRegistry)
+        .<Transaction, Transaction>chunk(CHUNK_SIZE)
         .transactionManager(transactionManager)
         .reader(reader(null, null))
         .processor(processor())
@@ -76,12 +90,16 @@ public class BatchConfiguration {
 
   @Bean
   public Step taskletStep(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
-    return new StepBuilder("fileDownloadingStep", jobRepository).tasklet(new FileDownloadTasklet(), transactionManager).build();
+    return new StepBuilder("fileDownloadingStep", jobRepository)
+        .observationRegistry(observationRegistry)
+        .tasklet(new FileDownloadTasklet(), transactionManager)
+        .build();
   }
 
   @Bean
   public Job souJavaJob(JobRepository jobRepository, PlatformTransactionManager transactionManager) {
     return new JobBuilder("souJavaJob", jobRepository)
+        .observationRegistry(observationRegistry)
         .incrementer(new RunIdIncrementer())
         .start(taskletStep(jobRepository, transactionManager))
         .next(chunkletStep(jobRepository, transactionManager))

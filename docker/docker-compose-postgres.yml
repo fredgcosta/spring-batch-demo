@@ -10,7 +10,7 @@ services:
     entrypoint: [ "echo", "MySQL service is disabled" ]
 
   postgres:
-    image: postgres:12.2-alpine
+    image: postgres:18-alpine
     container_name: dataflow-postgres
     restart: always
     environment:
@@ -25,7 +25,7 @@ services:
       - scdf-net
 
   pgadmin4:
-    image: dpage/pgadmin4:4.21
+    image: dpage/pgadmin4:9.17.0
     container_name: dataflow-pgadmin4
     restart: always
     environment:

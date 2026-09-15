@@ -18,7 +18,7 @@ Spring Boot 4.0.8 (Java 17) batch application that reads a fixed-length flat fil
 ./mvnw clean package                               # build jar
 ```
 
-- Tests are JUnit 5. Repository tests use `@DataJpaTest` with H2 (`src/test/resources/application.properties` overrides the datasource and disables OTLP metrics/tracing export).
+- Tests are JUnit 5. Repository tests use `@DataJpaTest` with H2 (`src/test/resources/application.properties` overrides the datasource and disables OTLP metrics/tracing/logging export via the Boot 4.1 keys `management.otlp.metrics.export.enabled` / `management.tracing.export.otlp.enabled` / `management.logging.export.otlp.enabled`).
 - Running the full app locally requires Postgres; the main `application.properties` hardcodes `jdbc:postgresql://localhost:5432/dataflow` (user `root` / `rootpw`).
 - Spring Batch 6 split core classes into two modules: `org.springframework.batch.core.*` (Job/Step/JobRepository, now under `core.job`/`core.step`/etc.) and the new `org.springframework.batch.infrastructure.item.*` (readers/writers/tokenizers/mappers, formerly `org.springframework.batch.item.*`). Keep this in mind when adding new imports.
 
