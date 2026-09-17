@@ -16,7 +16,7 @@ public class FileFooterTokenizer extends FixedLengthTokenizer {
          * 0000este eh o header do arquivo
          */
         final Range[] ranges = new Range[] {
-                new Range(1, 4), //4
+                new Range(1, 4), // 4
                 new Range(5, 31)
         };
         this.setNames(names);

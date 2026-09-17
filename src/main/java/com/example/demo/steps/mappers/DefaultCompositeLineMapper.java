@@ -12,26 +12,28 @@ import org.springframework.batch.infrastructure.item.file.mapping.PatternMatchin
 import org.springframework.batch.infrastructure.item.file.transform.LineTokenizer;
 
 public class DefaultCompositeLineMapper extends PatternMatchingCompositeLineMapper<Transaction> {
-    public DefaultCompositeLineMapper() {
-        super(buildTokenizers(), buildFieldSetMappers());
-    }
+        public DefaultCompositeLineMapper() {
+                super(buildTokenizers(), buildFieldSetMappers());
+        }
 
-    private static Map<String, LineTokenizer> buildTokenizers() {
-        Map<String, LineTokenizer> tokenizers = new HashMap<>();
-        tokenizers.put(Transaction.LINE_ID + "*", new TransactionTokenizer());
-        //TODO Consertar o tipo Generics
-        // tokenizers.put(FileHeader.LINE_ID + "*", new FileHeaderTokenizer());
-        // tokenizers.put(FileFooter.LINE_ID + "*", new FileFooterTokenizer());
-        tokenizers.put("*", new DefaultTokenizer());
-        return tokenizers;
-    }
+        private static Map<String, LineTokenizer> buildTokenizers() {
+                Map<String, LineTokenizer> tokenizers = new HashMap<>();
+                tokenizers.put(Transaction.LINE_ID + "*", new TransactionTokenizer());
+                // TODO Consertar o tipo Generics
+                // tokenizers.put(FileHeader.LINE_ID + "*", new FileHeaderTokenizer());
+                // tokenizers.put(FileFooter.LINE_ID + "*", new FileFooterTokenizer());
+                tokenizers.put("*", new DefaultTokenizer());
+                return tokenizers;
+        }
 
-    private static Map<String, FieldSetMapper<Transaction>> buildFieldSetMappers() {
-        Map<String, FieldSetMapper<Transaction>> fieldSetMappers = new HashMap<>();
-        fieldSetMappers.put(Transaction.LINE_ID + "*", new TransactionFieldSetMapper());
-        // fieldSetMappers.put(FileHeader.LINE_ID + "*", new FileHeaderFieldSetMapper());
-        // fieldSetMappers.put(FileFooter.LINE_ID + "*", new FileFooterFieldSetMapper());
-        fieldSetMappers.put("*", new DefaultFieldSetMapper());
-        return fieldSetMappers;
-    }
+        private static Map<String, FieldSetMapper<Transaction>> buildFieldSetMappers() {
+                Map<String, FieldSetMapper<Transaction>> fieldSetMappers = new HashMap<>();
+                fieldSetMappers.put(Transaction.LINE_ID + "*", new TransactionFieldSetMapper());
+                // fieldSetMappers.put(FileHeader.LINE_ID + "*", new
+                // FileHeaderFieldSetMapper());
+                // fieldSetMappers.put(FileFooter.LINE_ID + "*", new
+                // FileFooterFieldSetMapper());
+                fieldSetMappers.put("*", new DefaultFieldSetMapper());
+                return fieldSetMappers;
+        }
 }
