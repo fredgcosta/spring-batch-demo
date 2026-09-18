@@ -1,5 +1,3 @@
-version: "3.8"
-
 # Configuration environment variables:
 # - DATAFLOW_VERSION and SKIPPER_VERSION specify what DataFlow and Skipper image versions to use
 #   (default: 2.11.5 / 2.11.5-jdk17, matching the images built by ./Dockerfile).

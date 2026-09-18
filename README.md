@@ -11,7 +11,7 @@ Delete the sample code, replace with your own and you’re good to go.
 * [Maven](https://maven.apache.org/) - Dependency Management
 * [Spring Boot](https://start.spring.io/) - Spring Boot Initializer
 * [Java 25](https://adoptium.net/) - Java™ Platform, Standard Edition Development Kit (alvo de build/execução da aplicação)
-* [Spring Boot 4.0.8](https://spring.io/projects/spring-boot) - Framework to ease the bootstrapping and development of new Spring Applications
+* [Spring Boot 4.1.1](https://spring.io/projects/spring-boot) - Framework to ease the bootstrapping and development of new Spring Applications
 * [Spring Batch 6.0.5](https://spring.io/projects/spring-batch) - Batch processing framework
 * [PostgreSQL](https://www.postgresql.org/) - The World's Most Advanced Open Source Relational Database
 * [git](https://git-scm.com/) - Free and Open-Source distributed version control system
@@ -73,16 +73,56 @@ mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:transport=
 > sufixo Java 25 for publicada para essas imagens, basta atualizar o `Dockerfile`, os `docker-compose*.yml`
 > e os comandos abaixo.
 
+### Running the app locally with OTel-LGTM observability (standalone, no SCDF)
+
+The batch app already exports OTLP metrics, traces, and logs to `http://localhost:4318`
+(see `src/main/resources/application.properties`), which is exactly the port the
+all-in-one `grafana/otel-lgtm` container exposes. So the local flow is: start Postgres,
+start the LGTM backend, then run the app. The job runs once on startup and the process exits.
+
+1. Start Postgres (standalone, minimal — do **not** use `docker-compose-postgres.yml`, which is an
+   override meant to layer on `docker-compose.yml`):
+
+   ```shell
+   docker compose -f docker/docker-compose-postgres-only.yml up -d
+   ```
+
+2. Start the OTel-LGTM backend (OTel Collector + Prometheus + Tempo + Loki + Grafana in one
+   container). It self-declares the `scdf-net` network, so it renders standalone:
+
+   ```shell
+   docker compose -f docker/docker-compose-otel-lgtm.yml up -d lgtm
+   ```
+
+3. Run the app. It exports OTLP to `localhost:4318` and the job runs on startup:
+
+   ```shell
+   ./mvnw spring-boot:run
+   ```
+
+4. Open Grafana at `http://localhost:3000` (login `admin`/`admin`) to view the metrics, traces,
+   and logs. Traces correlate with the JSON console logs via the `trace_id`/`span_id` fields.
+
+Tear down when done:
+
+```shell
+docker compose -f docker/docker-compose-otel-lgtm.yml down
+docker compose -f docker/docker-compose-postgres-only.yml down
+```
+
+> If no collector is listening, OTLP export fails quietly — the app still runs and the console
+> JSON logs still carry trace IDs. Start the LGTM container (step 2) to actually see traces/logs.
+
 If you want to run the Spring Cloud Data Flow example, run the following commands:
 
 ```shell
-HOST_MOUNT_PATH=~/.m2/repository/ DOCKER_MOUNT_PATH=/root/.m2/repository STREAM_APPS_URI=https://dataflow.spring.io/Einstein-BUILD-SNAPSHOT-stream-applications-kafka-maven SKIPPER_VERSION=2.11.5-jdk17 DATAFLOW_VERSION=2.11.5 docker-compose -f ./docker/docker-compose.yml -f ./docker/docker-compose-postgres.yml -f ./docker/docker-compose-otel-lgtm.yml up
+HOST_MOUNT_PATH=~/.m2/repository/ DOCKER_MOUNT_PATH=/root/.m2/repository STREAM_APPS_URI=https://dataflow.spring.io/Einstein-BUILD-SNAPSHOT-stream-applications-kafka-maven SKIPPER_VERSION=2.11.5-jdk17 DATAFLOW_VERSION=2.11.5 docker compose -f ./docker/docker-compose.yml -f ./docker/docker-compose-postgres.yml -f ./docker/docker-compose-otel-lgtm.yml up
 ```
 
 And to Shut Down the containers:
 
 ```shell
-HOST_MOUNT_PATH=~/.m2/repository/ DOCKER_MOUNT_PATH=/root/.m2/repository STREAM_APPS_URI=https://dataflow.spring.io/Einstein-BUILD-SNAPSHOT-stream-applications-kafka-maven SKIPPER_VERSION=2.11.5-jdk17 DATAFLOW_VERSION=2.11.5 docker-compose -f ./docker/docker-compose.yml -f ./docker/docker-compose-postgres.yml -f ./docker/docker-compose-otel-lgtm.yml down
+HOST_MOUNT_PATH=~/.m2/repository/ DOCKER_MOUNT_PATH=/root/.m2/repository STREAM_APPS_URI=https://dataflow.spring.io/Einstein-BUILD-SNAPSHOT-stream-applications-kafka-maven SKIPPER_VERSION=2.11.5-jdk17 DATAFLOW_VERSION=2.11.5 docker compose -f ./docker/docker-compose.yml -f ./docker/docker-compose-postgres.yml -f ./docker/docker-compose-otel-lgtm.yml down
 ```
 
 ### Tools

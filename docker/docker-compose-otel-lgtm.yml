@@ -1,5 +1,3 @@
-version: "3.8"
-
 # Extends the default docker-compose.yml with an OpenTelemetry backend for observability.
 # Usa a imagem all-in-one grafana/otel-lgtm (https://github.com/grafana/docker-otel-lgtm), que já
 # empacota OTel Collector + Prometheus + Tempo + Loki + Grafana num único container — substitui
@@ -22,18 +20,12 @@ services:
                 "enabled":true,
                 "url":"http://lgtm:4318/v1/metrics"
             },
-            "task.management.otlp.tracing.export":{
-                "enabled":true,
-                "url":"http://lgtm:4318/v1/traces"
-            },
+            "task.management.opentelemetry.tracing.export.otlp.endpoint":"http://lgtm:4318/v1/traces",
             "stream.management.otlp.metrics.export":{
                 "enabled":true,
                 "url":"http://lgtm:4318/v1/metrics"
             },
-            "stream.management.otlp.tracing.export":{
-                "enabled":true,
-                "url":"http://lgtm:4318/v1/traces"
-            }
+            "stream.management.opentelemetry.tracing.export.otlp.endpoint":"http://lgtm:4318/v1/traces"
           },
           "spring.cloud.dataflow.grafana-info.url":"http://localhost:3000"
         }
@@ -49,3 +41,10 @@ services:
       - "3200:3200" # Tempo (traces)
     networks:
       - scdf-net
+
+# Declara a rede externa scdf-net (definida no docker-compose.yml base) para que este override
+# seja auto-consistente e possa ser validado isoladamente.
+networks:
+  scdf-net:
+    external: true
+    name: scdf-net
