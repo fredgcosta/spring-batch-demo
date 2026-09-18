@@ -10,11 +10,13 @@ Delete the sample code, replace with your own and you’re good to go.
 
 * [Maven](https://maven.apache.org/) - Dependency Management
 * [Spring Boot](https://start.spring.io/) - Spring Boot Initializer
-* [OpenJDK](https://adoptopenjdk.net/?variant=openjdk11&jvmVariant=hotspot) - Java™ Platform, Standard Edition Development Kit
-* [Spring Boot](https://spring.io/projects/spring-boot) - Framework to ease the bootstrapping and development of new Spring Applications
+* [Java 25](https://adoptium.net/) - Java™ Platform, Standard Edition Development Kit (alvo de build/execução da aplicação)
+* [Spring Boot 4.1.1](https://spring.io/projects/spring-boot) - Framework to ease the bootstrapping and development of new Spring Applications
+* [Spring Batch 6.0.5](https://spring.io/projects/spring-batch) - Batch processing framework
 * [PostgreSQL](https://www.postgresql.org/) - The World's Most Advanced Open Source Relational Database
 * [git](https://git-scm.com/) - Free and Open-Source distributed version control system
-* [Prometheus](https://prometheus.io/) - Monitoring system and time series database
+* [OpenTelemetry](https://opentelemetry.io/) - Observability framework; the app exports metrics and traces via OTLP (replaces the legacy Prometheus RSocket proxy)
+* [Grafana OTel-LGTM](https://github.com/grafana/docker-otel-lgtm) - All-in-one observability backend (OTel Collector + Prometheus + Tempo + Loki + Grafana) that receives OTLP; Prometheus/Tempo/Loki are embedded, not separate services
 * [Lombok](https://projectlombok.org/) - Never write another getter or equals method again, with one annotation your class has a fully featured builder, Automate your logging variables, and much more.
 
 ## External Tools Used
@@ -56,29 +58,85 @@ Debug Mode
 mvn spring-boot:run -Dspring-boot.run.jvmArguments="-Xdebug -Xrunjdwp:transport=dt_socket,server=y,suspend=y,address=5005"  
 ```
 
+> ### ⚠️ Nota: Java 25 e as imagens do Spring Cloud Data Flow (fallback do Requisito 5.5)
+>
+> A **aplicação** passou a ter como alvo de build e execução o **Java 25**. No entanto, as imagens
+> Docker do **Spring Cloud Data Flow** (`springcloud/spring-cloud-dataflow-server`) e do **Skipper**
+> (`springcloud/spring-cloud-skipper-server`) **não publicam (ainda) uma tag com sufixo Java 25** — o
+> maior sufixo de JDK disponível no Docker Hub é `-jdk17`. Por isso, o `docker/Dockerfile`, os arquivos
+> `docker/docker-compose*.yml` e os comandos abaixo **permanecem intencionalmente na tag `2.11.5-jdk17`**.
+>
+> Esse é o **fallback previsto no Requisito 5.5**: quando não existe tag de Java 25 para uma imagem, a
+> referência é mantida inalterada e a indisponibilidade é registrada aqui. Como consequência, a
+> **paridade entre o JDK do build (Java 25) e o JDK do container SCDF (jdk17) não pode ser atingida no
+> momento** para o stack do Spring Cloud Data Flow (caveat do Requisito 5.4). Assim que uma tag com
+> sufixo Java 25 for publicada para essas imagens, basta atualizar o `Dockerfile`, os `docker-compose*.yml`
+> e os comandos abaixo.
+
+### Running the app locally with OTel-LGTM observability (standalone, no SCDF)
+
+The batch app already exports OTLP metrics, traces, and logs to `http://localhost:4318`
+(see `src/main/resources/application.properties`), which is exactly the port the
+all-in-one `grafana/otel-lgtm` container exposes. So the local flow is: start Postgres,
+start the LGTM backend, then run the app. The job runs once on startup and the process exits.
+
+1. Start Postgres (standalone, minimal — do **not** use `docker-compose-postgres.yml`, which is an
+   override meant to layer on `docker-compose.yml`):
+
+   ```shell
+   docker compose -f docker/docker-compose-postgres-only.yml up -d
+   ```
+
+2. Start the OTel-LGTM backend (OTel Collector + Prometheus + Tempo + Loki + Grafana in one
+   container). This standalone file is self-contained and exposes OTLP on `localhost:4318`:
+
+   ```shell
+   docker compose -f docker/docker-compose-otel-lgtm-only.yml up -d
+   ```
+
+3. Run the app. It exports OTLP to `localhost:4318` and the job runs on startup:
+
+   ```shell
+   ./mvnw spring-boot:run
+   ```
+
+4. Open Grafana at `http://localhost:3000` (login `admin`/`admin`) to view the metrics, traces,
+   and logs. Traces correlate with the JSON console logs via the `trace_id`/`span_id` fields.
+
+Tear down when done:
+
+```shell
+docker compose -f docker/docker-compose-otel-lgtm-only.yml down
+docker compose -f docker/docker-compose-postgres-only.yml down
+```
+
+> If no collector is listening, OTLP export fails quietly — the app still runs and the console
+> JSON logs still carry trace IDs. Start the LGTM container (step 2) to actually see traces/logs.
+
 If you want to run the Spring Cloud Data Flow example, run the following commands:
 
 ```shell
-HOST_MOUNT_PATH=~/.m2/repository/ DOCKER_MOUNT_PATH=/root/.m2/repository STREAM_APPS_URI=https://dataflow.spring.io/Einstein-BUILD-SNAPSHOT-stream-applications-kafka-maven SKIPPER_VERSION=2.4.0.RELEASE DATAFLOW_VERSION=2.5.0.RELEASE docker-compose -f ./docker/docker-compose.yml -f ./docker/docker-compose-postgres.yml -f ./docker/docker-compose-prometheus.yml up
+HOST_MOUNT_PATH=~/.m2/repository/ DOCKER_MOUNT_PATH=/root/.m2/repository STREAM_APPS_URI=https://dataflow.spring.io/Einstein-BUILD-SNAPSHOT-stream-applications-kafka-maven SKIPPER_VERSION=2.11.5-jdk17 DATAFLOW_VERSION=2.11.5 docker compose -f ./docker/docker-compose.yml -f ./docker/docker-compose-postgres.yml -f ./docker/docker-compose-otel-lgtm.yml up
 ```
 
 And to Shut Down the containers:
 
 ```shell
-HOST_MOUNT_PATH=~/.m2/repository/ DOCKER_MOUNT_PATH=/root/.m2/repository STREAM_APPS_URI=https://dataflow.spring.io/Einstein-BUILD-SNAPSHOT-stream-applications-kafka-maven SKIPPER_VERSION=2.4.0.RELEASE DATAFLOW_VERSION=2.5.0.RELEASE docker-compose -f ./docker/docker-compose.yml -f ./docker/docker-compose-postgres.yml -f ./docker/docker-compose-prometheus.yml down
+HOST_MOUNT_PATH=~/.m2/repository/ DOCKER_MOUNT_PATH=/root/.m2/repository STREAM_APPS_URI=https://dataflow.spring.io/Einstein-BUILD-SNAPSHOT-stream-applications-kafka-maven SKIPPER_VERSION=2.11.5-jdk17 DATAFLOW_VERSION=2.11.5 docker compose -f ./docker/docker-compose.yml -f ./docker/docker-compose-postgres.yml -f ./docker/docker-compose-otel-lgtm.yml down
 ```
 
 ### Tools
 
 To monitor and manage your application
 
-| Tool          | URL                                       | Method |
-| ------------- | ----------------------------------------- | ------ |
-| SCDF Dashboad | `http://localhost:9393/dashboard`         | GET    |
-| Prometheus    | `http://localhost:9090/graph`             | GET    |
-| Grafana       | `http://localhost:3000`                   | GET    |
-| RSocket Proxy | `http://localhost:9096/metrics/connected` | GET    |
-| pgAdmin4      | `http://localhost:80`                     | GET    |
+| Tool             | URL                                       | Method |
+| ---------------- | ----------------------------------------- | ------ |
+| SCDF Dashboad        | `http://localhost:9393/dashboard`           | GET    |
+| Prometheus (LGTM)    | `http://localhost:9090/graph`               | GET    |
+| Grafana (LGTM)       | `http://localhost:3000` (login admin/admin) | GET    |
+| OTLP (LGTM ingest)   | `http://localhost:4318` (HTTP) / 4317 (gRPC)| POST   |
+| Tempo (traces)       | `http://localhost:3200`                     | GET    |
+| pgAdmin4             | `http://localhost:80`                       | GET    |
 
 ### URLs
 

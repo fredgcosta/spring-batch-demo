@@ -1,13 +1,11 @@
 package com.example.demo.steps.chunklets;
 
-import java.util.List;
-
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.example.demo.models.Transaction;
 import com.example.demo.repositories.TransactionRepository;
-
-import org.springframework.batch.item.ItemWriter;
+import org.springframework.batch.infrastructure.item.Chunk;
+import org.springframework.batch.infrastructure.item.ItemWriter;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,11 +17,12 @@ public class TransactionItemWriter implements ItemWriter<Transaction> {
         this.transactionRepository = transactionRepository;
     }
 
-    @Override
-    @Transactional
-    public void write(List<? extends Transaction> items) throws Exception {
-        log.info("salvando a lista de transações em lotes de " + items.size());
-        transactionRepository.saveAll(items);
-    }
+        @Override
+
+        @Transactional("transactionManager")
+        public void write(Chunk<? extends Transaction> items) throws Exception {
+                log.info("salvando a lista de transações em lotes de " + items.getItems().size());
+                transactionRepository.saveAll(items);
+        }
 
 }

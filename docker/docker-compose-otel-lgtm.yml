@@ -1,0 +1,50 @@
+# Extends the default docker-compose.yml with an OpenTelemetry backend for observability.
+# Usa a imagem all-in-one grafana/otel-lgtm (https://github.com/grafana/docker-otel-lgtm), que já
+# empacota OTel Collector + Prometheus + Tempo + Loki + Grafana num único container — substitui
+# tanto o antigo prometheus-rsocket-proxy quanto o setup manual de otel-collector/prometheus/grafana
+# separados (não é mais preciso customizar scrape config: o Collector interno já alimenta o
+# Prometheus/Tempo/Loki embutidos).
+# Usage: docker-compose -f ./docker-compose.yml -f ./docker-compose-otel-lgtm.yml up
+# NOTA (fallback Requisito 5.5): este override nao fixa tags de imagem SCDF/Skipper nem defaults de
+# SKIPPER_VERSION/DATAFLOW_VERSION; as imagens herdadas do docker-compose.yml permanecem em jdk17 por
+# nao existir tag com sufixo Java 25 (a imagem grafana/otel-lgtm abaixo nao possui sufixo de JDK e
+# nao e afetada). Ver a nota no README.md sobre as imagens do Spring Cloud Data Flow.
+services:
+  dataflow-server:
+    environment:
+      - |
+        SPRING_APPLICATION_JSON=
+        {
+          "spring.cloud.dataflow.applicationProperties":{
+            "task.management.otlp.metrics.export":{
+                "enabled":true,
+                "url":"http://lgtm:4318/v1/metrics"
+            },
+            "task.management.opentelemetry.tracing.export.otlp.endpoint":"http://lgtm:4318/v1/traces",
+            "stream.management.otlp.metrics.export":{
+                "enabled":true,
+                "url":"http://lgtm:4318/v1/metrics"
+            },
+            "stream.management.opentelemetry.tracing.export.otlp.endpoint":"http://lgtm:4318/v1/traces"
+          },
+          "spring.cloud.dataflow.grafana-info.url":"http://localhost:3000"
+        }
+
+  lgtm:
+    image: grafana/otel-lgtm:${LGTM_VERSION:-latest}
+    container_name: lgtm
+    ports:
+      - "3000:3000" # Grafana UI (login padrão: admin/admin)
+      - "4317:4317" # OTLP gRPC
+      - "4318:4318" # OTLP HTTP
+      - "9090:9090" # Prometheus UI (embutido)
+      - "3200:3200" # Tempo (traces)
+    networks:
+      - scdf-net
+
+# Declara a rede externa scdf-net (definida no docker-compose.yml base) para que este override
+# seja auto-consistente e possa ser validado isoladamente.
+networks:
+  scdf-net:
+    external: true
+    name: scdf-net

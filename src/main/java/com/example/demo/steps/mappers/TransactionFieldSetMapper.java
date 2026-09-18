@@ -5,8 +5,8 @@ import com.example.demo.models.RegTypeThree;
 import com.example.demo.models.RegTypeTwo;
 import com.example.demo.models.Transaction;
 
-import org.springframework.batch.item.file.mapping.FieldSetMapper;
-import org.springframework.batch.item.file.transform.FieldSet;
+import org.springframework.batch.infrastructure.item.file.mapping.FieldSetMapper;
+import org.springframework.batch.infrastructure.item.file.transform.FieldSet;
 import org.springframework.validation.BindException;
 
 public class TransactionFieldSetMapper implements FieldSetMapper<Transaction> {

@@ -1,0 +1,13 @@
+# Postgres isolado para rodar apenas o job de batch (sem SCDF/Skipper).
+# Uso: docker compose -f docker/docker-compose-postgres-only.yml up -d
+services:
+  postgres:
+    image: postgres:18-alpine
+    container_name: dataflow-postgres
+    restart: always
+    environment:
+      POSTGRES_DB: dataflow
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: rootpw
+    ports:
+      - "5432:5432"

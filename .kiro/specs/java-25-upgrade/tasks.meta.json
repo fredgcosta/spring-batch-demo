@@ -1,0 +1,375 @@
+{
+  "pbtResults": {},
+  "executionHistory": {
+    "1.1 Declarar o `rewrite-maven-plugin` com a Recipe_UpgradeToJava25 ativa": [
+      {
+        "executionId": "dd5710ca-4f6d-4a42-a709-ab958ea3c969",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789431419628
+      },
+      {
+        "executionId": "dd5710ca-4f6d-4a42-a709-ab958ea3c969",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789431437201
+      },
+      {
+        "executionId": "dd5710ca-4f6d-4a42-a709-ab958ea3c969",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789431592116
+      }
+    ],
+    "1.2 Declarar o Code_Genome_Repository e a configuração de credenciais (Caminho A)": [
+      {
+        "executionId": "dd5710ca-4f6d-4a42-a709-ab958ea3c969",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789431420189
+      },
+      {
+        "executionId": "dd5710ca-4f6d-4a42-a709-ab958ea3c969",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789431596154
+      },
+      {
+        "executionId": "dd5710ca-4f6d-4a42-a709-ab958ea3c969",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789431690845
+      }
+    ],
+    "2.1 Garantir árvore de trabalho limpa e executar o Dry_Run": [
+      {
+        "executionId": "dd5710ca-4f6d-4a42-a709-ab958ea3c969",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789431420612
+      },
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789443969918
+      },
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789444061289
+      }
+    ],
+    "3. Checkpoint — Avaliar o Dry_Run antes de aplicar": [
+      {
+        "executionId": "dd5710ca-4f6d-4a42-a709-ab958ea3c969",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789431421074
+      },
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789445302308
+      }
+    ],
+    "4.1 Aplicar a recipe com `rewrite:run`": [
+      {
+        "executionId": "dd5710ca-4f6d-4a42-a709-ab958ea3c969",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789431422180
+      },
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789445314530
+      },
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789445573639
+      }
+    ],
+    "4.2 Definir explicitamente `java.version=25` no `pom.xml`": [
+      {
+        "executionId": "dd5710ca-4f6d-4a42-a709-ab958ea3c969",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789431422572
+      },
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789445574723
+      },
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789445659698
+      }
+    ],
+    "4.3 Alinhar a versão do Lombok entre dependência e annotation processor": [
+      {
+        "executionId": "dd5710ca-4f6d-4a42-a709-ab958ea3c969",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789431422906
+      },
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789445660858
+      }
+    ],
+    "5.1 Verificar e ajustar dependências/plugins incompatíveis": [
+      {
+        "executionId": "dd5710ca-4f6d-4a42-a709-ab958ea3c969",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789431423332
+      },
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789445667601
+      },
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789446046191
+      }
+    ],
+    "5.2 Tratar APIs depreciadas/removidas remanescentes": [
+      {
+        "executionId": "dd5710ca-4f6d-4a42-a709-ab958ea3c969",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789431423829
+      },
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789446045332
+      }
+    ],
+    "6. Checkpoint — Build compila no Java 25": [
+      {
+        "executionId": "dd5710ca-4f6d-4a42-a709-ab958ea3c969",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789431424352
+      },
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789446052627
+      },
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789446103058
+      }
+    ],
+    "7.1 Atualizar a imagem base no `docker/Dockerfile`": [
+      {
+        "executionId": "dd5710ca-4f6d-4a42-a709-ab958ea3c969",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789431424827
+      },
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789446144257
+      },
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789446505164
+      }
+    ],
+    "7.2 Atualizar tags e defaults de variáveis nos arquivos docker-compose": [
+      {
+        "executionId": "dd5710ca-4f6d-4a42-a709-ab958ea3c969",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789431425228
+      },
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789446145257
+      },
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789446506640
+      }
+    ],
+    "7.3 Atualizar menções de JDK no `README.md`": [
+      {
+        "executionId": "dd5710ca-4f6d-4a42-a709-ab958ea3c969",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789431425638
+      },
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789446146658
+      },
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789446507455
+      }
+    ],
+    "8.1 Adicionar a dependência jqwik e a infraestrutura de teste do job": [
+      {
+        "executionId": "dd5710ca-4f6d-4a42-a709-ab958ea3c969",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789431426159
+      },
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789446147627
+      },
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789446508775
+      }
+    ],
+    "9. Checkpoint — Suíte de testes verde no Java 25": [
+      {
+        "executionId": "dd5710ca-4f6d-4a42-a709-ab958ea3c969",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789431426707
+      },
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789447420903
+      },
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789447464597
+      }
+    ],
+    "11.2 Registrar um único commit convencional com o gate de build+testes": [
+      {
+        "executionId": "dd5710ca-4f6d-4a42-a709-ab958ea3c969",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789431427137
+      },
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789447632883
+      }
+    ],
+    "1. Configurar o Rewrite_Maven_Plugin e o repositório de artefatos no `pom.xml`": [
+      {
+        "executionId": "dd5710ca-4f6d-4a42-a709-ab958ea3c969",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789431691094
+      }
+    ],
+    "2. Executar o Dry_Run e decidir o caminho de aquisição": [
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789444061636
+      }
+    ],
+    "2.2 Aplicar o fallback de aquisição do artefato se o Caminho A falhar": [
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789444062473
+      },
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789445301060
+      }
+    ],
+    "4. Aplicar a recipe e realizar os ajustes manuais de build": [
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789445661214
+      }
+    ],
+    "5. Verificar compatibilidade de dependências e plugins com Java 25": [
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789446046600
+      }
+    ],
+    "7. Atualizar imagens Docker e referências de JDK": [
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789446507853
+      }
+    ],
+    "8. Adicionar testes baseados em propriedades para o Job_Batch": [
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789446509157
+      }
+    ],
+    "8.2 Escrever o teste de propriedade para o grafo de entidades": [
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789446521738
+      },
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789447416072
+      }
+    ],
+    "8.3 Escrever o teste de propriedade de preservação de comportamento": [
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789446523301
+      },
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789447415142
+      }
+    ],
+    "8.4 Escrever teste de exemplo/edge case para falha do job": [
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789446523910
+      },
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789447413724
+      }
+    ],
+    "10.1 Executar o `souJavaJob` sobre o arquivo de entrada padrão": [
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789447472367
+      }
+    ],
+    "10. Validar a execução do Job_Batch no Java 25": [
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789447472640
+      }
+    ],
+    "11.1 Revisar o diff e ajustar alterações indesejadas": [
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789447631743
+      }
+    ],
+    "11. Revisar o Diff_Migracao e registrar o commit": [
+      {
+        "executionId": "7bdde7a6-436e-4ba0-968b-4c736b255cf4",
+        "chatSessionId": "sess_ae9d2302-3e21-4cc9-8f67-7664335709f3",
+        "timestamp": 1789447633258
+      }
+    ]
+  }
+}

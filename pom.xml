@@ -4,7 +4,7 @@
   <parent>
     <groupId>org.springframework.boot</groupId>
     <artifactId>spring-boot-starter-parent</artifactId>
-    <version>2.2.6.RELEASE</version>
+    <version>4.1.1</version>
     <relativePath />
   </parent>
   <groupId>com.example</groupId>
@@ -13,10 +13,18 @@
   <name>spring-batch-demo</name>
   <description>Demo project for Spring Boot</description>
   <properties>
-    <java.version>11</java.version>
-    <spring-cloud.version>Hoxton.SR4</spring-cloud.version>
+    <java.version>25</java.version>
+    <spring-cloud.version>2025.1.3</spring-cloud.version>
     <spring-cloud-task.version>2.5.0.RELEASE</spring-cloud-task.version>
-    <prometheus-rsocket-proxy.version>0.9.0</prometheus-rsocket-proxy.version>
+    <spring-batch.version>6.0.5</spring-batch.version>
+    <!-- Lombok: versão com suporte a JDK 25, referenciada tanto na dependência
+         org.projectlombok:lombok quanto no annotationProcessorPaths do
+         maven-compiler-plugin, garantindo alinhamento entre ambos (Req. 3.3). -->
+    <lombok.version>1.18.48</lombok.version>
+    <!-- jqwik: biblioteca de property-based testing integrada ao JUnit Platform.
+         Não é gerenciada pelo BOM do Spring Boot, por isso a versão é fixada aqui.
+         Usada pelos testes de propriedade do souJavaJob (tarefas 8.2/8.3). -->
+    <jqwik.version>1.10.1</jqwik.version>
   </properties>
   <dependencies>
     <dependency>
@@ -48,53 +56,66 @@
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-actuator</artifactId>
     </dependency>
+    <!-- Necessário para o endpoint 'configprops' do Actuator serializar tipos java.time.
+         Não vem transitivamente sem um starter web no Spring Boot 4; versão gerenciada pelo BOM. -->
+    <dependency>
+      <groupId>com.fasterxml.jackson.datatype</groupId>
+      <artifactId>jackson-datatype-jsr310</artifactId>
+    </dependency>
     <dependency>
       <groupId>org.springframework.boot</groupId>
       <artifactId>spring-boot-starter-test</artifactId>
       <scope>test</scope>
-      <exclusions>
-        <exclusion>
-          <groupId>org.junit.vintage</groupId>
-          <artifactId>junit-vintage-engine</artifactId>
-        </exclusion>
-      </exclusions>
     </dependency>
     <dependency>
       <groupId>org.springframework.batch</groupId>
       <artifactId>spring-batch-test</artifactId>
       <scope>test</scope>
+      <exclusions>
+        <exclusion>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+        </exclusion>
+      </exclusions>
+    </dependency>
+    <dependency>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-data-jpa-test</artifactId>
+      <scope>test</scope>
     </dependency>
 
-    <!-- Enable Prometheus metrics collection (via Prometheus RSocket Proxy) -->
-    <!-- Internally it imports the org.springframework.boot:spring-boot-actuator-autoconfigure dependency -->
+    <!-- Starter oficial de OpenTelemetry do time Spring (Boot 4+). Agrega o SDK OTel autoconfigurado,
+         o micrometer-registry-otlp (métricas) e o micrometer-tracing-bridge-otel (traces), e — o mais
+         importante aqui — registra o Tracer no ObservationRegistry, o que popula o MDC com traceId/spanId.
+         Substitui a montagem manual das três dependências OTel usadas antes. -->
     <dependency>
-      <groupId>io.micrometer.prometheus</groupId>
-      <artifactId>prometheus-rsocket-spring</artifactId>
-      <version>${prometheus-rsocket-proxy.version}</version>
+      <groupId>org.springframework.boot</groupId>
+      <artifactId>spring-boot-starter-opentelemetry</artifactId>
     </dependency>
+    <!-- Appender OTel para Logback: envia os eventos de log para a API OpenTelemetry, permitindo
+         exportar logs via OTLP. Versão fixada (sufixo -alpha; não há release estável) e pareada
+         com o OTel SDK 1.62.0 trazido pelo starter — instrumentation 2.10.0 ~ SDK 1.62.0. -->
     <dependency>
-      <groupId>io.micrometer.prometheus</groupId>
-      <artifactId>prometheus-rsocket-client</artifactId>
-      <version>${prometheus-rsocket-proxy.version}</version>
+      <groupId>io.opentelemetry.instrumentation</groupId>
+      <artifactId>opentelemetry-logback-appender-1.0</artifactId>
+      <version>2.10.0-alpha</version>
     </dependency>
-
+    <!-- API incubadora do OTel, exigida pelo logback-appender ao mapear atributos do log record
+         (ExtendedSdkLogRecordBuilder). Não é gerenciada pelo BOM; versão pareada com o SDK 1.62.0. -->
     <dependency>
-      <groupId>io.micrometer</groupId>
-      <artifactId>micrometer-registry-prometheus</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.github.mweirauch</groupId>
-      <artifactId>micrometer-jvm-extras</artifactId>
-      <version>0.2.0</version>
+      <groupId>io.opentelemetry</groupId>
+      <artifactId>opentelemetry-api-incubator</artifactId>
+      <version>1.62.0-alpha</version>
     </dependency>
     <dependency>
       <groupId>net.logstash.logback</groupId>
       <artifactId>logstash-logback-encoder</artifactId>
-      <version>6.3</version>
+      <version>9.0</version>
     </dependency>
     <dependency>
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
+      <version>${lombok.version}</version>
       <optional>true</optional>
     </dependency>
     <dependency>
@@ -105,12 +126,19 @@
     <dependency>
       <groupId>org.assertj</groupId>
       <artifactId>assertj-core</artifactId>
-      <version>3.15.0</version>
       <scope>test</scope>
     </dependency>
     <dependency>
       <groupId>com.h2database</groupId>
       <artifactId>h2</artifactId>
+      <scope>test</scope>
+    </dependency>
+    <!-- Property-based testing (jqwik). O engine jqwik é descoberto via JUnit Platform,
+         coexistindo com o engine JUnit Jupiter usado pelos demais testes. -->
+    <dependency>
+      <groupId>net.jqwik</groupId>
+      <artifactId>jqwik</artifactId>
+      <version>${jqwik.version}</version>
       <scope>test</scope>
     </dependency>
   </dependencies>
@@ -130,6 +158,39 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <configuration>
+          <annotationProcessorPaths>
+            <path>
+              <groupId>org.projectlombok</groupId>
+              <artifactId>lombok</artifactId>
+              <version>${lombok.version}</version>
+            </path>
+          </annotationProcessorPaths>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-dependency-plugin</artifactId>
+        <executions>
+          <execution>
+            <id>get-mockito-agent-path</id>
+            <goals>
+              <goal>properties</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-surefire-plugin</artifactId>
+        <configuration>
+          <!--suppress MavenModelInspection -->
+          <argLine>-javaagent:${org.mockito:mockito-core:jar}</argLine>
+        </configuration>
       </plugin>
     </plugins>
   </build>
