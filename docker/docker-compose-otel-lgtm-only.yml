@@ -1,0 +1,19 @@
+# Backend de observabilidade OTel-LGTM isolado, para rodar apenas o job de batch localmente
+# (sem SCDF/Skipper). Empacota OTel Collector + Prometheus + Tempo + Loki + Grafana num unico
+# container (grafana/otel-lgtm). A aplicacao exporta OTLP para localhost:4318 por padrao
+# (ver src/main/resources/application.properties), que casa com a porta exposta abaixo.
+#
+# Diferente de docker-compose-otel-lgtm.yml (que e um *override* do docker-compose.yml e nao roda
+# isolado, pois define um dataflow-server parcial), este arquivo e auto-contido.
+#
+# Uso: docker compose -f docker/docker-compose-otel-lgtm-only.yml up -d
+services:
+  lgtm:
+    image: grafana/otel-lgtm:${LGTM_VERSION:-latest}
+    container_name: lgtm
+    ports:
+      - "3000:3000" # Grafana UI (login padrao: admin/admin)
+      - "4317:4317" # OTLP gRPC
+      - "4318:4318" # OTLP HTTP
+      - "9090:9090" # Prometheus UI (embutido)
+      - "3200:3200" # Tempo (traces)

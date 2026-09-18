@@ -88,10 +88,10 @@ start the LGTM backend, then run the app. The job runs once on startup and the p
    ```
 
 2. Start the OTel-LGTM backend (OTel Collector + Prometheus + Tempo + Loki + Grafana in one
-   container). It self-declares the `scdf-net` network, so it renders standalone:
+   container). This standalone file is self-contained and exposes OTLP on `localhost:4318`:
 
    ```shell
-   docker compose -f docker/docker-compose-otel-lgtm.yml up -d lgtm
+   docker compose -f docker/docker-compose-otel-lgtm-only.yml up -d
    ```
 
 3. Run the app. It exports OTLP to `localhost:4318` and the job runs on startup:
@@ -106,7 +106,7 @@ start the LGTM backend, then run the app. The job runs once on startup and the p
 Tear down when done:
 
 ```shell
-docker compose -f docker/docker-compose-otel-lgtm.yml down
+docker compose -f docker/docker-compose-otel-lgtm-only.yml down
 docker compose -f docker/docker-compose-postgres-only.yml down
 ```
 
